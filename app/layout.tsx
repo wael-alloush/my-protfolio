@@ -12,13 +12,15 @@ import "./globals.css";
 /*
  * تاجوال خط الهوية للعربية واللاتينية. ليس خطاً متغيّراً، وأوزانه المتاحة
  * 200 و300 و400 و500 و700 و800 و900 (لا يوجد 600).
- * preload معطّل لأن تحميل كل الأوزان مسبقاً يثقل الصفحة؛ المتصفح يجلب الوزن عند استخدامه.
+ * optional يمنع استبدال الخط بعد الرسم الأول حتى لا يتحرك التخطيط.
+ * preload معطّل لأن تحميل كل الأوزان مسبقاً يثقل الصفحة.
  */
 const tajawal = Tajawal({
   subsets: ["arabic", "latin"],
   weight: ["200", "300", "400", "500", "700", "800", "900"],
   variable: "--font-tajawal",
-  display: "swap",
+  display: "optional",
+  adjustFontFallback: true,
   preload: false,
 });
 

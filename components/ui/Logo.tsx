@@ -19,7 +19,7 @@ export function LogoMark({
       height={520}
       sizes="160px"
       loading={eager ? "eager" : "lazy"}
-      className={cn("h-9 w-auto", className)}
+      className={cn("aspect-[925/520] h-9 w-auto", className)}
     />
   );
 }
@@ -39,9 +39,9 @@ export function Logo({
       className={cn("inline-flex items-center gap-3 text-brand-cream", className)}
       aria-label={`${siteConfig.name} - الصفحة الرئيسية`}
     >
-      <LogoMark eager={eager} className="h-8 sm:h-10" />
-      <span className="flex flex-col items-start leading-none">
-        <span className="text-lg font-semibold sm:text-2xl">
+      <LogoMark eager={eager} className="h-8 w-[3.56rem] sm:h-10 sm:w-[4.45rem]" />
+      <span className="flex min-w-0 flex-col items-start leading-none">
+        <span className="text-lg font-medium sm:text-2xl">
           <span className="text-brand-accent">{nameLead}</span>
           {nameRest.length > 0 ? ` ${nameRest.join(" ")}` : null}
         </span>
