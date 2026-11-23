@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WA STUDIO — تصميم وتطوير المواقع (Next.js)
 
-## Getting Started
+إعادة بناء لـ [ammarbadie.me](https://ammarbadie.me) بهوية WA STUDIO (أخضر غامق + ذهبي + كريمي)، مع RTL عربي كامل.
 
-First, run the development server:
+الصفحة الرئيسية مطابقة لتخطيط الموقع المرجعي بالقياس: أُخذت أبعاد ومواضع كل قسم من المرجع عند عرض 1440px وضُبطت الأقسام عليها (ارتفاع الصفحة 4508px مقابل 4507px في المرجع)، مع استبدال ألوان وخطوط المرجع بالهوية.
+
+## التشغيل
 
 ```bash
+npm install
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+افتح [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+npm run start
+npm run lint
+npm run format
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## متغيرات البيئة
 
-## Learn More
+انظر `.env.example`:
 
-To learn more about Next.js, take a look at the following resources:
+| المتغير | الوصف |
+|---------|--------|
+| `NEXT_PUBLIC_SITE_URL` | رابط الموقع للـ SEO |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER` | رقم واتساب دولي بدون `+` |
+| `CONTACT_MODE` | `whatsapp` (افتراضي) أو `resend` |
+| `RESEND_API_KEY` / `RESEND_FROM` | عند اختيار Resend |
+| `NEXT_PUBLIC_GTM_ID` | معرّف GTM (فارغ = معطّل) |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## تعديل المحتوى
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- النصوص العامة: `content/ar.ts`
+- المشاريع: `content/projects.ts`
+- الأسعار: `content/pricing.ts`
+- مقالات المدونة: ملفات MDX في `content/blog/`
 
-## Deploy on Vercel
+## تعديل الهوية البصرية
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. الألوان والـ radius والظلال: `app/globals.css` (`:root` + `@theme`). المشروع على Tailwind v4 الذي يقرأ التوكنات من CSS، لذلك `tailwind.config.ts` نسخة TypeScript مرجعية فقط (`brandTokens`) وليس مصدر التوكنات.
+2. الألوان الستة الأساسية فقط مكتوبة كقيم؛ كل الدرجات الأخرى (الخلفية، البطاقات، الحدود، التوهج) مشتقة منها بـ `color-mix`، فتغيير لون أساسي يغيّر الموقع كله.
+3. الخط عبر `next/font` في `app/layout.tsx`: **Tajawal** للعربية واللاتينية. أوزانه 200 و300 و400 و500 و700 و800 و900، لذلك `font-medium` يحل محل `font-semibold` (لا يوجد وزن 600).
+4. الشعار والصورة الشخصية: `public/brand/` (الصورة `wael.jpg`).
+5. في المكوّنات استخدم فقط توكنات مثل `bg-brand-primary` و `text-brand-accent` — لا تكتب ألواناً مباشرة.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## البنية
+
+```
+app/                 # صفحات App Router + API + sitemap/robots
+components/
+  layout/            # Header, Footer, Modal provider, GTM
+  sections/          # أقسام الصفحات
+  ui/                # Button, Card, Container, Modal...
+  forms/             # نموذج طلب التصميم
+content/             # نصوص ومشاريع وأسعار ومدونة
+lib/                 # SEO, site config, blog helpers
+public/brand/        # أصول الهوية
+```
+
+## النشر على Vercel
+
+1. ادفع المستودع إلى GitHub.
+2. Import المشروع في Vercel.
+3. أضف متغيرات البيئة من `.env.example`.
+4. Framework Preset: Next.js — البناء تلقائي عبر `next build`.
+
+## قرارات تنفيذية
+
+- مسار المدونة `/blog` (بدل `/blog-2` في المرجع) مع redirects اختيارية لاحقاً إن لزم.
+- أسعار بعض باقات المتاجر لم تظهر كاملة في المصدر؛ وُضعت قيم تقريبية قابلة للتعديل في `content/pricing.ts`.
+- صور المشاريع Placeholders محلية بألوان الهوية في `public/projects/` — بدون hotlinking من الموقع الأصلي. استبدلها بلقطاتك الحقيقية بنفس الأسماء.
+- إرسال النموذج: واتساب برسالة معبأة افتراضياً؛ Resend عبر تبديل `CONTACT_MODE`.
+- مطابقة ألوان المرجع بالهوية: الأسود ← الداكن `#1A1D1F` معمَّقاً، الكحلي (بطاقات/حدود/توهج) ← الأخضران، الأزرق الفاتح ← الذهبي بنص داكن.
+- الشعار في الهيدر: علامة WA مع الاسم «وائل العلوش» وتحته «تصميم وتطوير المواقع». الملف `public/brand/logo-mark.png` مستخرج بخلفية شفافة من ملف الشعار المرفق؛ يُفضَّل استبداله بنسخة SVG عند توفرها.
+- زر "اطلب تصميم موقعك" في الهيدر يظهر في قائمة الجوال فقط، وروابط الأسعار الثلاثة حُذفت من الفوتر، لأن المرجع يخفيهما فعلياً في التصميم. صفحات الأسعار ما زالت متاحة من صفحة الخدمات.
+- الزر العائم "أي موقع تحتاجه لمشروعك؟" حُذف.
+- نص الفقرات بوزن Tajawal 300 بدل 200 في المرجع لوضوح القراءة على الخلفية الداكنة. أحجام الخط ضُبطت على Cairo ثم نُقلت إلى تاجوال، وقد يختلف عرض السطر قليلاً لأن مقاييس الخطين غير متطابقة.
+- قسم بطاقات الأجهزة في الهيرو (لابتوب، تابلت، جوال، بطاقة العلامة) حُذف.
+- محتوى الخدمات والمشاريع والمدونة مأخوذ من الموقع المنشور [waelaloush.com](https://waelaloush.com/) ووُضع في التصميم الحالي: ثلاث خدمات مع صفحاتها، ثلاثة مشاريع بلقطاتها وروابطها، وخمس مقالات. صفحات الأسعار القديمة ما زالت موجودة ولم تُستبدل.
+- الاسم الشخصي «وائل العلوش» مصدره `siteConfig.name` في `lib/site.ts`، ويظهر في التحية والفوتر وعناوين SEO ورسالة واتساب. الكتابة اللاتينية في `nameEn` هي Wael Al-Alloush.
