@@ -154,9 +154,12 @@ export const footer = {
   linksTitle: "روابط الموقع:",
   links: [
     { href: "/", label: "الرئيسية" },
+    { href: "/about", label: "عنّي" },
     { href: "/services", label: "الخدمات" },
     { href: "/portfolio", label: "الأعمال" },
     { href: "/blog", label: "المدونة" },
+    { href: "/contact", label: "تواصل" },
+    { href: "/terms", label: "الشروط" },
   ],
   socialLabel: "حسابات التواصل",
 } as const;

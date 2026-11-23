@@ -66,18 +66,7 @@ export function createMetadata({
 }
 
 function profileLinks() {
-  return [
-    siteConfig.social.linkedin,
-    siteConfig.social.x,
-    siteConfig.social.instagram,
-  ].filter((url) => {
-    try {
-      const path = new URL(url).pathname.replace(/\/+$/, "");
-      return path.length > 1;
-    } catch {
-      return false;
-    }
-  });
+  return [siteConfig.social.instagram, siteConfig.social.whatsapp];
 }
 
 export function personJsonLd() {
@@ -99,20 +88,45 @@ export function personJsonLd() {
 }
 
 export function businessJsonLd() {
+  const sameAs = profileLinks();
+
   return {
     "@context": "https://schema.org",
-    "@type": "ProfessionalService",
+    "@type": ["Organization", "LocalBusiness"],
     "@id": `${siteConfig.url}/#business`,
-    name: siteConfig.name,
+    name: siteConfig.brand,
+    alternateName: [siteConfig.name, siteConfig.nameEn],
     url: siteConfig.url,
     image: absoluteUrl("/brand/wael.jpg"),
-    logo: absoluteUrl(DEFAULT_IMAGE),
+    logo: {
+      "@type": "ImageObject",
+      url: absoluteUrl(DEFAULT_IMAGE),
+    },
     description: siteConfig.description,
+    email: siteConfig.email,
     telephone: `+${siteConfig.phone}`,
     founder: { "@id": `${siteConfig.url}/#person` },
-    areaServed: { "@type": "Country", name: "Saudi Arabia" },
-    availableLanguage: "Arabic",
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "SA",
+      addressLocality: "الرياض",
+    },
+    areaServed: [
+      { "@type": "City", name: "الرياض" },
+      { "@type": "City", name: "جدة" },
+      { "@type": "City", name: "الدمام" },
+    ],
+    availableLanguage: ["Arabic", "ar"],
     serviceType: ["تصميم مواقع تعريفية", "صفحات هبوط", "إعادة تصميم المواقع"],
+    sameAs,
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer service",
+      telephone: `+${siteConfig.phone}`,
+      email: siteConfig.email,
+      url: absoluteUrl("/contact"),
+      availableLanguage: ["Arabic", "ar"],
+    },
   };
 }
 
@@ -125,7 +139,7 @@ export function websiteJsonLd() {
     url: siteConfig.url,
     description: siteConfig.description,
     inLanguage: "ar",
-    publisher: { "@id": `${siteConfig.url}/#person` },
+    publisher: { "@id": `${siteConfig.url}/#business` },
   };
 }
 

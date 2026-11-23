@@ -4,8 +4,6 @@ import { footer } from "@/content/ar";
 import { siteConfig } from "@/lib/site";
 
 const social = [
-  { label: "LinkedIn", href: siteConfig.social.linkedin, icon: LinkedInIcon },
-  { label: "X", href: siteConfig.social.x, icon: XIcon },
   { label: "Instagram", href: siteConfig.social.instagram, icon: InstagramIcon },
   { label: "WhatsApp", href: siteConfig.social.whatsapp, icon: WhatsAppIcon },
 ] as const;
@@ -65,22 +63,6 @@ export function Footer() {
         </ul>
       </Container>
     </footer>
-  );
-}
-
-function LinkedInIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.5h4V23h-4V8.5zM8.5 8.5h3.8v2h.05c.53-1 1.82-2.05 3.75-2.05 4.01 0 4.75 2.64 4.75 6.07V23h-4v-6.6c0-1.57-.03-3.6-2.2-3.6-2.2 0-2.54 1.72-2.54 3.5V23h-4V8.5z" />
-    </svg>
-  );
-}
-
-function XIcon() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M18.9 2H22l-6.8 7.78L23.5 22h-6.55l-5.13-6.7L6.2 22H3.1l7.28-8.32L.5 2h6.72l4.63 6.14L18.9 2zm-1.15 18h1.8L7.35 3.9H5.42L17.75 20z" />
-    </svg>
   );
 }
 

@@ -18,10 +18,9 @@ export const siteConfig = {
   ),
   locale: "ar_SA",
   phone: whatsappNumber,
+  email: "waelee2018@gmail.com",
   social: {
-    linkedin: "https://www.linkedin.com/",
-    x: "https://x.com/",
-    instagram: "https://www.instagram.com/",
+    instagram: "https://www.instagram.com/wa4web",
     whatsapp: `https://wa.me/${whatsappNumber}`,
   },
   gtmId: process.env.NEXT_PUBLIC_GTM_ID ?? "",

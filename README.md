@@ -1,6 +1,6 @@
 # WA STUDIO — تصميم وتطوير المواقع (Next.js)
 
-إعادة بناء لـ [ammarbadie.me](https://ammarbadie.me) بهوية WA STUDIO (أخضر غامق + ذهبي + كريمي)، مع RTL عربي كامل.
+إعادة بناء لـ بهوية WA STUDIO (أخضر غامق + ذهبي + كريمي)، مع RTL عربي كامل.
 
 الصفحة الرئيسية مطابقة لتخطيط الموقع المرجعي بالقياس: أُخذت أبعاد ومواضع كل قسم من المرجع عند عرض 1440px وضُبطت الأقسام عليها (ارتفاع الصفحة 4508px مقابل 4507px في المرجع)، مع استبدال ألوان وخطوط المرجع بالهوية.
 
@@ -25,13 +25,17 @@ npm run format
 
 انظر `.env.example`:
 
-| المتغير | الوصف |
-|---------|--------|
-| `NEXT_PUBLIC_SITE_URL` | رابط الموقع للـ SEO |
-| `NEXT_PUBLIC_WHATSAPP_NUMBER` | رقم واتساب دولي بدون `+` |
-| `CONTACT_MODE` | `whatsapp` (افتراضي) أو `resend` |
-| `RESEND_API_KEY` / `RESEND_FROM` | عند اختيار Resend |
-| `NEXT_PUBLIC_GTM_ID` | معرّف GTM (فارغ = معطّل) |
+
+| المتغير                          | الوصف                            |
+| -------------------------------- | -------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`           | رابط الموقع للـ SEO              |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER`    | رقم واتساب دولي بدون `+`         |
+| `CONTACT_MODE`                   | `whatsapp` (افتراضي) أو `resend` |
+| `RESEND_API_KEY` / `RESEND_FROM` | عند اختيار Resend                |
+| `NEXT_PUBLIC_GTM_ID`             | معرّف GTM (فارغ = معطّل)         |
+
+
+
 
 ## تعديل المحتوى
 
@@ -40,6 +44,8 @@ npm run format
 - الأسعار: `content/pricing.ts`
 - مقالات المدونة: ملفات MDX في `content/blog/`
 
+
+
 ## تعديل الهوية البصرية
 
 1. الألوان والـ radius والظلال: `app/globals.css` (`:root` + `@theme`). المشروع على Tailwind v4 الذي يقرأ التوكنات من CSS، لذلك `tailwind.config.ts` نسخة TypeScript مرجعية فقط (`brandTokens`) وليس مصدر التوكنات.
@@ -47,6 +53,8 @@ npm run format
 3. الخط عبر `next/font` في `app/layout.tsx`: **Tajawal** للعربية واللاتينية. أوزانه 200 و300 و400 و500 و700 و800 و900، لذلك `font-medium` يحل محل `font-semibold` (لا يوجد وزن 600).
 4. الشعار والصورة الشخصية: `public/brand/` (الصورة `wael.jpg`).
 5. في المكوّنات استخدم فقط توكنات مثل `bg-brand-primary` و `text-brand-accent` — لا تكتب ألواناً مباشرة.
+
+
 
 ## البنية
 
@@ -62,12 +70,16 @@ lib/                 # SEO, site config, blog helpers
 public/brand/        # أصول الهوية
 ```
 
+
+
 ## النشر على Vercel
 
 1. ادفع المستودع إلى GitHub.
 2. Import المشروع في Vercel.
 3. أضف متغيرات البيئة من `.env.example`.
 4. Framework Preset: Next.js — البناء تلقائي عبر `next build`.
+
+
 
 ## قرارات تنفيذية
 
@@ -83,3 +95,4 @@ public/brand/        # أصول الهوية
 - قسم بطاقات الأجهزة في الهيرو (لابتوب، تابلت، جوال، بطاقة العلامة) حُذف.
 - محتوى الخدمات والمشاريع والمدونة مأخوذ من الموقع المنشور [waelaloush.com](https://waelaloush.com/) ووُضع في التصميم الحالي: ثلاث خدمات مع صفحاتها، ثلاثة مشاريع بلقطاتها وروابطها، وخمس مقالات. صفحات الأسعار القديمة ما زالت موجودة ولم تُستبدل.
 - الاسم الشخصي «وائل العلوش» مصدره `siteConfig.name` في `lib/site.ts`، ويظهر في التحية والفوتر وعناوين SEO ورسالة واتساب. الكتابة اللاتينية في `nameEn` هي Wael Al-Alloush.
+
