@@ -1,11 +1,9 @@
-"use client";
-
-import { useContactModal } from "@/components/layout/ContactModalProvider";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { HeadingLines } from "@/components/ui/RichText";
 import { home } from "@/content/ar";
+import { siteConfig } from "@/lib/site";
 
 /** نجمة زخرفية بستة أذرع خلف بداية العنوان */
 function Asterisk() {
@@ -38,8 +36,6 @@ export function FinalCta({
   title?: string;
   button?: string;
 }) {
-  const { open } = useContactModal();
-
   return (
     <section className="pb-14 pt-20 lg:pb-[52px] lg:pt-[130px]">
       <Container>
@@ -54,10 +50,10 @@ export function FinalCta({
               )}
             </h2>
             <Button
+              href={siteConfig.social.whatsapp}
               variant="primary"
               size="lg"
               className="mt-10 lg:mt-[70px] lg:h-[52px]"
-              onClick={open}
             >
               {button}
             </Button>

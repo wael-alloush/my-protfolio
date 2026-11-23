@@ -1,16 +1,15 @@
 "use client";
 
-import { useContactModal } from "@/components/layout/ContactModalProvider";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
 import { NavLink } from "@/components/ui/NavLink";
 import { nav } from "@/content/ar";
 import { cn } from "@/lib/cn";
+import { siteConfig } from "@/lib/site";
 import { Fragment, useEffect, useState } from "react";
 
 export function Header() {
-  const { open } = useContactModal();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
@@ -32,8 +31,8 @@ export function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-40 pt-3 lg:pt-[17px]">
       <Container>
-        <div className="flex h-16 items-center justify-between gap-4 rounded-pill border border-brand-border bg-brand-background/75 ps-5 pe-3 backdrop-blur-xl lg:h-[87px] lg:px-[21px]">
-          <Logo eager />
+        <div className="flex h-14 min-w-0 items-center justify-between gap-2 overflow-hidden rounded-pill border border-brand-border bg-brand-background/75 ps-3 pe-1 backdrop-blur-xl sm:h-16 sm:gap-4 sm:ps-5 sm:pe-3 lg:h-[87px] lg:px-[21px]">
+          <Logo eager className="shrink" />
 
           <nav className="hidden items-center lg:flex" aria-label="القائمة الرئيسية">
             {nav.links.map((link, i) => (
@@ -58,19 +57,17 @@ export function Header() {
 
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
             <Button
+              href={siteConfig.social.whatsapp}
               variant="primary"
               size="sm"
-              className="!h-9 !px-3.5 !text-sm"
-              onClick={() => {
-                setMobileOpen(false);
-                open();
-              }}
+              className="!h-8 !px-2.5 !text-xs sm:!h-9 sm:!px-3.5 sm:!text-sm"
+              onClick={() => setMobileOpen(false)}
             >
               {nav.contact}
             </Button>
             <button
               type="button"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-pill text-brand-cream transition duration-brand hover:text-brand-accent lg:hidden"
+              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-pill text-brand-cream transition duration-brand hover:text-brand-accent sm:h-11 sm:w-11 lg:hidden"
               aria-label={mobileOpen ? "إغلاق القائمة" : "فتح القائمة"}
               aria-expanded={mobileOpen}
               aria-controls="mobile-drawer"
@@ -130,12 +127,10 @@ export function Header() {
           ))}
         </nav>
         <Button
+          href={siteConfig.social.whatsapp}
           variant="primary"
           className="mt-6"
-          onClick={() => {
-            setMobileOpen(false);
-            open();
-          }}
+          onClick={() => setMobileOpen(false)}
         >
           {nav.cta}
         </Button>

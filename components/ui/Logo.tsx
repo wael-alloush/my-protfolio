@@ -36,16 +36,22 @@ export function Logo({
   return (
     <Link
       href="/"
-      className={cn("inline-flex items-center gap-3 text-brand-cream", className)}
+      className={cn(
+        "inline-flex min-w-0 items-center gap-2 text-brand-cream sm:gap-3",
+        className,
+      )}
       aria-label={`${siteConfig.name} - الصفحة الرئيسية`}
     >
-      <LogoMark eager={eager} className="h-8 w-[3.56rem] sm:h-10 sm:w-[4.45rem]" />
+      <LogoMark
+        eager={eager}
+        className="h-7 w-[3.12rem] shrink-0 sm:h-10 sm:w-[4.45rem]"
+      />
       <span className="flex min-w-0 flex-col items-start leading-none">
-        <span className="text-lg font-medium sm:text-2xl">
+        <span className="max-w-full truncate text-sm font-medium min-[380px]:text-base sm:text-lg lg:text-2xl">
           <span className="text-brand-accent">{nameLead}</span>
           {nameRest.length > 0 ? ` ${nameRest.join(" ")}` : null}
         </span>
-        <span className="mt-1.5 text-[0.6875rem] text-brand-muted sm:text-xs">
+        <span className="mt-1 hidden max-w-full truncate text-[0.6875rem] text-brand-muted sm:block sm:text-xs">
           {siteConfig.brandTagline}
         </span>
       </span>

@@ -1,5 +1,4 @@
 import { Footer } from "@/components/layout/Footer";
-import { ContactModalProvider } from "@/components/layout/ContactModalProvider";
 import { GTM } from "@/components/layout/GTM";
 import { Header } from "@/components/layout/Header";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -95,11 +94,9 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col font-sans">
         <GTM />
         <JsonLd data={[personJsonLd(), businessJsonLd(), websiteJsonLd()]} />
-        <ContactModalProvider>
-          <Header />
-          <main className="flex-1 pt-20 lg:pt-[104px]">{children}</main>
-          <Footer />
-        </ContactModalProvider>
+        <Header />
+        <main className="flex-1 pt-20 lg:pt-[104px]">{children}</main>
+        <Footer />
       </body>
     </html>
   );

@@ -17,7 +17,6 @@ export const siteConfig = {
     "",
   ),
   locale: "ar_SA",
-  email: process.env.CONTACT_EMAIL ?? "hello@ammarbadie.me",
   phone: whatsappNumber,
   social: {
     linkedin: "https://www.linkedin.com/",
@@ -26,5 +25,4 @@ export const siteConfig = {
     whatsapp: `https://wa.me/${whatsappNumber}`,
   },
   gtmId: process.env.NEXT_PUBLIC_GTM_ID ?? "",
-  contactMode: (process.env.CONTACT_MODE ?? "whatsapp") as "whatsapp" | "resend",
 } as const;
