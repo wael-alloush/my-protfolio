@@ -21,6 +21,7 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden pb-12 pt-10 lg:pb-[61px] lg:pt-[68px]">
+      <div className="glow-orb pointer-events-none absolute inset-x-0 top-0 mx-auto h-[28rem] w-[min(100%,46rem)]" />
       <Container className="relative text-center">
         <motion.h1 {...rise(0)}>
           <span className="mx-auto block w-fit text-[1.875rem] font-extralight leading-[1.3] text-brand-cream sm:text-5xl sm:leading-[1.3] lg:text-[3.75rem] lg:leading-[78px]">
