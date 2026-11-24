@@ -27,7 +27,7 @@ function ThumbRow({
           {projects.map((project, index) => (
             <li
               key={`${copy}-${index}-${project.slug}`}
-              className="relative me-[5px] h-[7.5rem] w-[10rem] shrink-0 overflow-hidden bg-brand-sand sm:h-[193px] sm:w-[255px]"
+              className="relative me-1.25 h-30 w-40 shrink-0 overflow-hidden bg-brand-sand sm:h-48.25 sm:w-63.75"
             >
               <Image
                 src={project.image}
@@ -56,22 +56,22 @@ export function PortfolioShowcase({ projects }: { projects: Project[] }) {
   const { portfolio } = home;
 
   return (
-    <section className="pt-20 lg:pt-[140px]">
+    <section className="pt-20 lg:pt-35">
       <Container>
         <Reveal>
-          <div className="surface-border relative flex flex-col overflow-hidden rounded-brand-lg lg:h-[395px] lg:flex-row">
-            <div className="relative z-10 flex shrink-0 flex-col items-start px-7 py-10 text-start lg:w-[36%] lg:pb-0 lg:pe-0 lg:ps-[25px] lg:pt-[101px]">
-              <p className="flex h-[31px] items-center rounded-[7px] bg-brand-accent px-[17px] text-sm font-medium text-brand-dark">
+          <div className="surface-border relative flex flex-col overflow-hidden rounded-brand-lg lg:h-98.75 lg:flex-row">
+            <div className="relative z-10 flex shrink-0 flex-col items-start px-7 py-10 text-start lg:w-[36%] lg:pb-0 lg:pe-0 lg:ps-6.25 lg:pt-25.25">
+              <p className="flex h-7.75 items-center rounded-[7px] bg-brand-accent px-4.25 text-sm font-medium text-brand-dark">
                 {portfolio.badge}
               </p>
-              <h2 className="mt-2 text-[1.75rem] leading-[1.4] sm:text-4xl sm:leading-[1.4] lg:mt-0 lg:text-[2.5625rem] lg:leading-[58.5px]">
+              <h2 className="mt-2 text-[1.75rem] leading-[1.4] sm:text-4xl sm:leading-[1.4] lg:mt-0 lg:text-[2.5625rem] lg:leading-14.625">
                 <HeadingLines lines={portfolio.titleLines} />
               </h2>
               <Button
                 href="/portfolio"
                 variant="secondary"
                 size="lg"
-                className="mt-5 lg:mt-[15px]"
+                className="mt-5 lg:mt-3.75"
               >
                 {portfolio.cta}
                 <span aria-hidden>←</span>
@@ -86,7 +86,7 @@ export function PortfolioShowcase({ projects }: { projects: Project[] }) {
                   reverse
                 />
               </div>
-              <div className="pointer-events-none absolute inset-y-0 start-0 hidden w-36 bg-linear-to-l from-brand-background to-transparent lg:block" />
+              <div className="pointer-events-none absolute inset-y-0 inset-s-0 hidden w-36 bg-linear-to-l from-brand-background to-transparent lg:block" />
             </div>
           </div>
         </Reveal>

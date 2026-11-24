@@ -30,7 +30,7 @@ export function Marquee() {
             {phrases.map((phrase, i) => (
               <li
                 key={i}
-                className="flex items-center whitespace-nowrap text-lg font-light leading-[35px] text-brand-cream sm:text-[1.5625rem]"
+                className="flex items-center whitespace-nowrap text-lg font-light leading-8.75 text-brand-cream sm:text-[1.5625rem]"
               >
                 {phrase}
                 <Sparkle />

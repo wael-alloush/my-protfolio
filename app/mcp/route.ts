@@ -17,9 +17,20 @@ type Rpc = {
   params?: Record<string, unknown>;
 };
 
-function reply(message: Rpc) {
+async function reply(message: Rpc) {
   if (message.id === undefined || message.id === null) return null;
-  const result = mcpResult(String(message.method ?? ""), message.params);
+  let result: Awaited<ReturnType<typeof mcpResult>>;
+  try {
+    result = await mcpResult(String(message.method ?? ""), message.params);
+  } catch (error) {
+    // تعذّر قراءة المحتوى (مثلاً انقطاع قاعدة البيانات): رد JSON-RPC سليم بدل خطأ خادم.
+    console.error(error);
+    return {
+      jsonrpc: "2.0",
+      id: message.id,
+      error: { code: -32603, message: "Internal error" },
+    };
+  }
   if (result === undefined) {
     return {
       jsonrpc: "2.0",
@@ -54,14 +65,14 @@ export async function POST(request: Request) {
   }
 
   if (Array.isArray(body)) {
-    const responses = body
-      .map((item) => reply(item as Rpc))
-      .filter((item) => item !== null);
+    const responses = (
+      await Promise.all(body.map((item) => reply(item as Rpc)))
+    ).filter((item) => item !== null);
     if (responses.length === 0) return new Response(null, { status: 202, headers: cors });
     return json(responses);
   }
 
-  const response = reply(body as Rpc);
+  const response = await reply(body as Rpc);
   if (!response) return new Response(null, { status: 202, headers: cors });
   return json(response);
 }

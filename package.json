@@ -13,6 +13,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^14.14.0",
     "gray-matter": "^4.0.3",
+    "mysql2": "^3.24.6",
     "next": "16.4.6",
     "next-mdx-remote": "^6.0.0",
     "react": "19.3.0",

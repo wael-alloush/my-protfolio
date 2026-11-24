@@ -13,7 +13,7 @@ export function PageHero({
 }) {
   return (
     <section className="relative overflow-hidden mesh-dark">
-      <div className="pointer-events-none absolute -start-16 top-0 h-64 w-64 glow-orb blur-2xl" />
+      <div className="pointer-events-none absolute -inset-s-16 top-0 h-64 w-64 glow-orb blur-2xl" />
       <Container className="relative py-16 lg:py-24">
         <Reveal>
           <h1 className="text-display max-w-4xl text-balance text-brand-cream">

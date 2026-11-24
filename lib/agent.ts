@@ -1,44 +1,15 @@
-import { services } from "@/content/services";
-import { projects } from "@/content/projects";
+import { getProjects, getServices } from "@/lib/content";
 import { absoluteUrl } from "@/lib/seo";
-import { siteConfig } from "@/lib/site";
+import { getSiteConfig } from "@/lib/settings";
+import { activeSocialLinks, siteDefaults } from "@/lib/site";
 
 const SERVER_NAME = "wa-studio";
 const SERVER_VERSION = "1.0.0";
 const PROTOCOL_VERSION = "2025-06-18";
 
-export function linkHeader() {
-  return [
-    `<${absoluteUrl("/llms.txt")}>; rel="describedby"; type="text/plain"`,
-    `<${absoluteUrl("/index.md")}>; rel="alternate"; type="text/markdown"`,
-  ].join(", ");
-}
+async function pages() {
+  const [services, projects] = await Promise.all([getServices(), getProjects()]);
 
-/** Prefer Markdown when the client asks for it more strongly than HTML. */
-export function prefersMarkdown(accept: string) {
-  const types = accept.split(",").map((part) => {
-    const [rawType, ...params] = part.trim().split(";");
-    const qParam = params.find((param) => param.trim().toLowerCase().startsWith("q="));
-    const q = qParam ? Number(qParam.trim().slice(2)) : 1;
-    return {
-      type: rawType.trim().toLowerCase(),
-      q: Number.isFinite(q) ? q : 0,
-    };
-  });
-
-  const markdown = types.find(
-    (entry) => entry.type === "text/markdown" || entry.type === "text/x-markdown",
-  );
-  if (!markdown || markdown.q <= 0) return false;
-
-  const html = types.find(
-    (entry) => entry.type === "text/html" || entry.type === "application/xhtml+xml",
-  );
-  if (!html) return true;
-  return markdown.q >= html.q;
-}
-
-function pages() {
   return [
     { path: "/", title: "الرئيسية", note: "عرض الخدمات والأعمال ومسار طلب الموقع." },
     { path: "/about", title: "عنّي", note: "مهندس حاسب ومصمم مواقع، خبرة أكثر من 3 سنوات وأكثر من 30 مشروعاً." },
@@ -60,16 +31,20 @@ function pages() {
   ];
 }
 
-export function homepageMarkdown() {
-  const phone = `+${siteConfig.phone}`;
+export async function homepageMarkdown() {
+  const [list, site] = await Promise.all([pages(), getSiteConfig()]);
+  const phone = `+${site.phone}`;
+  const socialLines = activeSocialLinks(site).map(
+    (item) => `- ${item.label}: ${item.href}`,
+  );
   const lines = [
-    `# ${siteConfig.title}`,
+    `# ${site.title}`,
     "",
-    `> ${siteConfig.description}`,
+    `> ${site.description}`,
     "",
     "## النشاط",
     "",
-    `${siteConfig.name} (${siteConfig.nameEn}) يعمل تحت العلامة ${siteConfig.brand}: ${siteConfig.brandTagline}.`,
+    `${site.name} (${site.nameEn}) يعمل تحت العلامة ${site.brand}: ${site.brandTagline}.`,
     "مهندس حاسب ومصمم مواقع في السعودية. الخبرة أكثر من 3 سنوات، ونفّذ أكثر من 30 مشروعاً.",
     "السعر لا يُنشر كباقات؛ يُطلب عبر واتساب.",
     "",
@@ -80,14 +55,13 @@ export function homepageMarkdown() {
     "",
     "## التواصل",
     "",
-    `- واتساب: ${siteConfig.social.whatsapp}`,
     `- الهاتف: ${phone}`,
-    `- البريد: ${siteConfig.email}`,
-    `- إنستغرام: ${siteConfig.social.instagram}`,
+    `- البريد: ${site.email}`,
+    ...socialLines,
     "",
     "## الصفحات",
     "",
-    ...pages().map(
+    ...list.map(
       (page) => `- [${page.title}](${absoluteUrl(page.path)}): ${page.note}`,
     ),
     "",
@@ -97,35 +71,38 @@ export function homepageMarkdown() {
   return lines.join("\n");
 }
 
-export function llmsText() {
-  const phone = `+${siteConfig.phone}`;
+export async function llmsText() {
+  const [list, site] = await Promise.all([pages(), getSiteConfig()]);
+  const phone = `+${site.phone}`;
+  const socialLines = activeSocialLinks(site).map(
+    (item) => `- ${item.label}: ${item.href}`,
+  );
   return [
-    `# ${siteConfig.brand}`,
+    `# ${site.brand}`,
     "",
-    `> ${siteConfig.name} (${siteConfig.nameEn}) يصمّم ويطوّر مواقع عربية للشركات في السعودية. التواصل مباشر عبر واتساب، والسعر يُتفق عليه قبل البدء.`,
+    `> ${site.name} (${site.nameEn}) يصمّم ويطوّر مواقع عربية للشركات في السعودية. التواصل مباشر عبر واتساب، والسعر يُتفق عليه قبل البدء.`,
     "",
     "Content-Signal: search=yes, ai-train=no",
     "",
     "## الهوية",
     "",
-    `- الاسم: ${siteConfig.name}`,
-    `- العلامة: ${siteConfig.brand}`,
-    `- الموقع: ${siteConfig.url}`,
+    `- الاسم: ${site.name}`,
+    `- العلامة: ${site.brand}`,
+    `- الموقع: ${site.url}`,
     `- الهاتف: ${phone}`,
-    `- البريد: ${siteConfig.email}`,
-    `- واتساب: ${siteConfig.social.whatsapp}`,
-    `- إنستغرام: ${siteConfig.social.instagram}`,
+    `- البريد: ${site.email}`,
+    ...socialLines,
     "",
     "## الصفحات الأساسية",
     "",
-    ...pages().map(
+    ...list.map(
       (page) => `- [${page.title}](${absoluteUrl(page.path)}): ${page.note}`,
     ),
     "",
     "## للوكلاء",
     "",
     `- [الصفحة الرئيسية بصيغة Markdown](${absoluteUrl("/index.md")})`,
-    `- أرسل \`Accept: text/markdown\` إلى ${siteConfig.url} للحصول على نفس الملخص.`,
+    `- أرسل \`Accept: text/markdown\` إلى ${site.url} للحصول على نفس الملخص.`,
     `- بطاقة خادم MCP: ${absoluteUrl("/.well-known/mcp/server-card.json")}`,
     "",
   ].join("\n");
@@ -138,7 +115,7 @@ export function serverCard() {
     protocolVersion: PROTOCOL_VERSION,
     serverInfo: {
       name: SERVER_NAME,
-      title: siteConfig.brand,
+      title: siteDefaults.brand,
       version: SERVER_VERSION,
     },
     description:
@@ -193,12 +170,12 @@ export function serverCard() {
   };
 }
 
-export function mcpResult(method: string, params: Record<string, unknown> | undefined) {
+export async function mcpResult(method: string, params: Record<string, unknown> | undefined) {
   if (method === "initialize") {
     return {
       protocolVersion: PROTOCOL_VERSION,
       capabilities: { tools: {}, resources: {} },
-      serverInfo: { name: SERVER_NAME, title: siteConfig.brand, version: SERVER_VERSION },
+      serverInfo: { name: SERVER_NAME, title: siteDefaults.brand, version: SERVER_VERSION },
       instructions: "Read-only. Use get_business_profile, get_page, or the listed resources.",
     };
   }
@@ -218,13 +195,13 @@ export function mcpResult(method: string, params: Record<string, unknown> | unde
     const args = (params?.arguments ?? {}) as Record<string, unknown>;
     if (name === "get_business_profile") {
       return {
-        content: [{ type: "text", text: homepageMarkdown() }],
+        content: [{ type: "text", text: await homepageMarkdown() }],
       };
     }
     if (name === "get_page") {
       const path = String(args.path ?? "/");
       const normalized = path.startsWith("/") ? path : `/${path}`;
-      const page = pages().find((item) => item.path === normalized);
+      const page = (await pages()).find((item) => item.path === normalized);
       const text = page
         ? `${page.title}\n${absoluteUrl(page.path)}\n${page.note}`
         : `Unknown path: ${normalized}`;
@@ -240,13 +217,13 @@ export function mcpResult(method: string, params: Record<string, unknown> | unde
     const uri = String(params?.uri ?? "");
     if (uri === absoluteUrl("/llms.txt")) {
       return {
-        contents: [{ uri, mimeType: "text/plain", text: llmsText() }],
+        contents: [{ uri, mimeType: "text/plain", text: await llmsText() }],
       };
     }
     if (uri === absoluteUrl("/index.md") || uri === absoluteUrl("/")) {
       return {
         contents: [
-          { uri: absoluteUrl("/index.md"), mimeType: "text/markdown", text: homepageMarkdown() },
+          { uri: absoluteUrl("/index.md"), mimeType: "text/markdown", text: await homepageMarkdown() },
         ],
       };
     }

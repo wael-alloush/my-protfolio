@@ -20,28 +20,28 @@ export function Hero() {
         };
 
   return (
-    <section className="relative overflow-hidden pb-12 pt-10 lg:pb-[61px] lg:pt-[68px]">
-      <div className="glow-orb pointer-events-none absolute inset-x-0 top-0 mx-auto h-[28rem] w-[min(100%,46rem)]" />
+    <section className="relative overflow-hidden pb-12 pt-10 lg:pb-15.25 lg:pt-17">
+      <div className="glow-orb pointer-events-none absolute inset-x-0 top-0 mx-auto h-112 w-[min(100%,46rem)]" />
       <Container className="relative text-center">
         <motion.h1 {...rise(0)}>
-          <span className="mx-auto block w-fit text-[1.875rem] font-extralight leading-[1.3] text-brand-cream sm:text-5xl sm:leading-[1.3] lg:text-[3.75rem] lg:leading-[78px]">
+          <span className="mx-auto block w-fit text-[1.875rem] font-extralight leading-[1.3] text-brand-cream sm:text-5xl sm:leading-[1.3] lg:text-[3.75rem] lg:leading-19.5">
             {hero.line1}
           </span>
-          <span className="mx-auto mt-3 block w-fit text-[2.25rem] font-bold leading-[1.3] text-brand-cream sm:text-6xl sm:leading-[1.3] lg:mt-4 lg:text-[3.9375rem] lg:leading-[85px]">
+          <span className="mx-auto mt-3 block w-fit text-[2.25rem] font-bold leading-[1.3] text-brand-cream sm:text-6xl sm:leading-[1.3] lg:mt-4 lg:text-[3.9375rem] lg:leading-21.25">
             {hero.line2.before}{" "}
             <span className="text-brand-accent">{hero.line2.accent}</span>
           </span>
         </motion.h1>
 
         <motion.p
-          className="mx-auto mt-8 max-w-[37.5rem] text-base font-light leading-[1.95] text-brand-cream/85 sm:text-[1.1875rem] sm:leading-[35.2px]"
+          className="mx-auto mt-8 max-w-150 text-base font-light leading-[1.95] text-brand-cream/85 sm:text-[1.1875rem] sm:leading-8.8"
           {...rise(0.12)}
         >
           <BodyText segments={hero.body} />
         </motion.p>
 
         <motion.div
-          className="mt-9 flex flex-wrap items-center justify-center gap-3 sm:gap-[21px] lg:mt-12"
+          className="mt-9 flex flex-wrap items-center justify-center gap-3 sm:gap-5.25 lg:mt-12"
           {...rise(0.2)}
         >
           <Button href={hero.primaryHref} variant="primary" size="lg">

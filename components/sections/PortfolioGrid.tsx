@@ -49,7 +49,7 @@ export function PortfolioGrid({ projects }: { projects: Project[] }) {
           {visible.map((project) => (
             <li key={project.slug}>
               <Link href={`/portfolio/${project.slug}`} className="group block text-center">
-                <div className="relative aspect-[4/3] overflow-hidden rounded-brand-lg border border-brand-cream/10 bg-brand-card">
+                <div className="relative aspect-4/3 overflow-hidden rounded-brand-lg border border-brand-cream/10 bg-brand-card">
                   <Image
                     src={project.image}
                     alt={`معاينة مشروع ${project.name}`}

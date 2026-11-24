@@ -1,8 +1,3 @@
-import { Footer } from "@/components/layout/Footer";
-import { GTM } from "@/components/layout/GTM";
-import { Header } from "@/components/layout/Header";
-import { JsonLd } from "@/components/seo/JsonLd";
-import { businessJsonLd, personJsonLd, websiteJsonLd } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 import type { Metadata } from "next";
 import { Tajawal } from "next/font/google";
@@ -91,13 +86,7 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`${tajawal.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col font-sans">
-        <GTM />
-        <JsonLd data={[personJsonLd(), businessJsonLd(), websiteJsonLd()]} />
-        <Header />
-        <main className="flex-1 pt-20 lg:pt-[104px]">{children}</main>
-        <Footer />
-      </body>
+      <body className="flex min-h-full flex-col font-sans">{children}</body>
     </html>
   );
 }

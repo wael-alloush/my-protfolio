@@ -5,7 +5,7 @@ import { home } from "@/content/ar";
 import { cn } from "@/lib/cn";
 import Link from "next/link";
 
-const iconClass = "h-16 w-16 shrink-0 fill-brand-accent lg:h-[82px] lg:w-[82px]";
+const iconClass = "h-16 w-16 shrink-0 fill-brand-accent lg:h-20.5 lg:w-20.5";
 
 const icons = [
   // نظام مخصص: قاعدة بيانات
@@ -34,33 +34,33 @@ export function Features() {
   const { features } = home;
 
   return (
-    <section className="relative pt-20 lg:pt-[120px]">
-      <div className="glow-orb pointer-events-none absolute inset-x-0 top-6 mx-auto h-[22rem] w-[min(100%,46rem)] lg:top-8" />
+    <section className="relative pt-20 lg:pt-30">
+      <div className="glow-orb pointer-events-none absolute inset-x-0 top-6 mx-auto h-88 w-[min(100%,46rem)] lg:top-8" />
 
       <Container className="relative">
         <Reveal>
           <div className="text-center">
-            <h2 className="text-[1.75rem] leading-[1.5] sm:text-4xl sm:leading-[1.5] lg:text-[2.875rem] lg:leading-[70px]">
+            <h2 className="text-[1.75rem] leading-normal sm:text-4xl sm:leading-normal lg:text-[2.875rem] lg:leading-17.5">
               <HeadingLines lines={features.titleLines} />
             </h2>
-            <p className="mt-4 font-light text-brand-muted sm:text-lg sm:leading-[30px]">
+            <p className="mt-4 font-light text-brand-muted sm:text-lg sm:leading-7.5">
               {features.subtitle}
             </p>
           </div>
         </Reveal>
 
-        <ul className="mt-12 grid gap-6 lg:mt-6 lg:grid-cols-3 lg:items-center lg:gap-[30px]">
+        <ul className="mt-12 grid gap-6 lg:mt-6 lg:grid-cols-3 lg:items-center lg:gap-7.5">
           {features.items.map((item, i) => (
             <li key={item.title} className="h-full lg:h-auto">
               <Reveal delay={i * 0.1} className="h-full">
                 <article
                   className={cn(
-                    "surface-border flex h-full flex-col items-start rounded-brand-xl px-8 pb-10 pt-12 text-start transition duration-brand hover:-translate-y-1 lg:pe-[60px] lg:ps-[45px] lg:pt-[100px]",
-                    item.featured ? "lg:min-h-[468px]" : "lg:min-h-[420px]",
+                    "surface-border flex h-full flex-col items-start rounded-brand-xl px-8 pb-10 pt-12 text-start transition duration-brand hover:-translate-y-1 lg:pe-15 lg:ps-11.25 lg:pt-25",
+                    item.featured ? "lg:min-h-117" : "lg:min-h-105",
                   )}
                 >
                   {icons[i]}
-                  <h3 className="mt-8 text-[1.375rem] leading-[30px] text-brand-cream lg:mt-[37px] lg:text-[1.4375rem]">
+                  <h3 className="mt-8 text-[1.375rem] leading-7.5 text-brand-cream lg:mt-9.25 lg:text-[1.4375rem]">
                     {item.title}
                   </h3>
                   <p className="mt-4 text-[0.9375rem] font-light leading-6 text-brand-muted">

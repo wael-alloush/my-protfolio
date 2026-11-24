@@ -6,10 +6,9 @@ import { Logo } from "@/components/ui/Logo";
 import { NavLink } from "@/components/ui/NavLink";
 import { nav } from "@/content/ar";
 import { cn } from "@/lib/cn";
-import { siteConfig } from "@/lib/site";
 import { Fragment, useEffect, useState } from "react";
 
-export function Header() {
+export function Header({ whatsappUrl }: { whatsappUrl: string }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
@@ -29,9 +28,9 @@ export function Header() {
   }, [mobileOpen]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 pt-3 lg:pt-[17px]">
+    <header className="fixed inset-x-0 top-0 z-40 pt-3 lg:pt-4.25">
       <Container>
-        <div className="flex h-14 min-w-0 items-center justify-between gap-2 overflow-hidden rounded-pill border border-brand-border bg-brand-background/75 ps-3 pe-1 backdrop-blur-xl sm:h-16 sm:gap-4 sm:ps-5 sm:pe-3 lg:h-[87px] lg:px-[21px]">
+        <div className="flex h-14 min-w-0 items-center justify-between gap-2 overflow-hidden rounded-pill border border-brand-border bg-brand-background/75 ps-3 pe-1 backdrop-blur-xl sm:h-16 sm:gap-4 sm:ps-5 sm:pe-3 lg:h-21.75 lg:px-5.25">
           <Logo eager className="shrink" />
 
           <nav className="hidden items-center lg:flex" aria-label="القائمة الرئيسية">
@@ -57,10 +56,10 @@ export function Header() {
 
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
             <Button
-              href={siteConfig.social.whatsapp}
+              href={whatsappUrl}
               variant="primary"
               size="sm"
-              className="!h-8 !px-2.5 !text-xs sm:!h-9 sm:!px-3.5 sm:!text-sm"
+              className="h-8! px-2.5! text-xs! sm:h-9! sm:px-3.5! sm:text-sm!"
               onClick={() => setMobileOpen(false)}
             >
               {nav.contact}
@@ -106,7 +105,7 @@ export function Header() {
       <aside
         id="mobile-drawer"
         className={cn(
-          "fixed inset-y-0 start-0 -z-10 flex w-[min(100%,20rem)] flex-col border-e border-brand-border bg-brand-surface px-6 pb-8 pt-28 text-brand-cream shadow-medium transition duration-brand lg:hidden",
+          "fixed inset-y-0 inset-s-0 -z-10 flex w-[min(100%,20rem)] flex-col border-e border-brand-border bg-brand-surface px-6 pb-8 pt-28 text-brand-cream shadow-medium transition duration-brand lg:hidden",
           mobileOpen
             ? "visible translate-x-0"
             : "invisible translate-x-full",
@@ -127,7 +126,7 @@ export function Header() {
           ))}
         </nav>
         <Button
-          href={siteConfig.social.whatsapp}
+          href={whatsappUrl}
           variant="primary"
           className="mt-6"
           onClick={() => setMobileOpen(false)}

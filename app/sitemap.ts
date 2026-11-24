@@ -1,8 +1,8 @@
-import { services } from "@/content/services";
-import { projects } from "@/content/projects";
-import { getAllPosts } from "@/lib/blog";
+import { getPosts, getProjects, getServices } from "@/lib/content";
 import { absoluteUrl } from "@/lib/seo";
 import type { MetadataRoute } from "next";
+
+export const revalidate = 300;
 
 type ChangeFrequency = NonNullable<
   MetadataRoute.Sitemap[number]["changeFrequency"]
@@ -12,18 +12,23 @@ function entry(
   path: string,
   priority: number,
   changeFrequency: ChangeFrequency,
-  lastModified?: Date,
+  modified?: string | null,
 ): MetadataRoute.Sitemap[number] {
+  const lastModified = modified ? new Date(modified) : null;
   return {
     url: absoluteUrl(path),
     changeFrequency,
     priority,
-    ...(lastModified ? { lastModified } : {}),
+    ...(lastModified && !Number.isNaN(lastModified.getTime()) ? { lastModified } : {}),
   };
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const posts = getAllPosts();
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [services, projects, posts] = await Promise.all([
+    getServices(),
+    getProjects(),
+    getPosts(),
+  ]);
 
   return [
     entry("/", 1, "weekly"),
@@ -32,21 +37,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry("/terms", 0.3, "yearly"),
     entry("/services", 0.9, "monthly"),
     ...services.map((service) =>
-      entry(`/services/${service.slug}`, 0.8, "monthly"),
+      entry(`/services/${service.slug}`, 0.8, "monthly", service.updatedAt),
     ),
     entry("/portfolio", 0.9, "monthly"),
     ...projects.map((project) =>
-      entry(`/portfolio/${project.slug}`, 0.7, "monthly"),
+      entry(`/portfolio/${project.slug}`, 0.7, "monthly", project.updatedAt),
     ),
     entry("/blog", 0.8, "weekly"),
-    ...posts.map((post) => {
-      const published = new Date(post.date);
-      return entry(
-        `/blog/${post.slug}`,
-        0.6,
-        "yearly",
-        Number.isNaN(published.getTime()) ? undefined : published,
-      );
-    }),
+    ...posts.map((post) =>
+      entry(`/blog/${post.slug}`, 0.6, "yearly", post.updatedAt ?? post.date),
+    ),
   ];
 }

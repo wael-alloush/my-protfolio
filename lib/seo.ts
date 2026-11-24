@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { siteConfig } from "@/lib/site";
+import { activeSocialLinks, siteConfig, type SiteConfig } from "@/lib/site";
 
 type PageSeo = {
   title: string;
@@ -18,7 +18,8 @@ export function absoluteUrl(path = "/") {
   return `${siteConfig.url}${normalized}`;
 }
 
-function brandedTitle(title: string) {
+/** العنوان كما يظهر في نتائج البحث: يُلحق به اسم الموقع ما لم يتضمنه. */
+export function brandedTitle(title: string) {
   return title.includes(siteConfig.name)
     ? title
     : `${title} | ${siteConfig.name}`;
@@ -65,47 +66,47 @@ export function createMetadata({
   };
 }
 
-function profileLinks() {
-  return [siteConfig.social.instagram, siteConfig.social.whatsapp];
+function profileLinks(site: SiteConfig) {
+  return activeSocialLinks(site).map((item) => item.href);
 }
 
-export function personJsonLd() {
-  const sameAs = profileLinks();
+export function personJsonLd(site: SiteConfig = siteConfig) {
+  const sameAs = profileLinks(site);
 
   return {
     "@context": "https://schema.org",
     "@type": "Person",
-    "@id": `${siteConfig.url}/#person`,
-    name: siteConfig.name,
-    alternateName: siteConfig.nameEn,
-    url: siteConfig.url,
+    "@id": `${site.url}/#person`,
+    name: site.name,
+    alternateName: site.nameEn,
+    url: site.url,
     jobTitle: "مهندس حاسب ومصمم مواقع",
-    description: siteConfig.description,
+    description: site.description,
     image: absoluteUrl("/brand/wael.jpg"),
     knowsAbout: ["تصميم المواقع", "تطوير المواقع", "صفحات الهبوط"],
     ...(sameAs.length > 0 ? { sameAs } : {}),
   };
 }
 
-export function businessJsonLd() {
-  const sameAs = profileLinks();
+export function businessJsonLd(site: SiteConfig = siteConfig) {
+  const sameAs = profileLinks(site);
 
   return {
     "@context": "https://schema.org",
     "@type": ["Organization", "LocalBusiness"],
-    "@id": `${siteConfig.url}/#business`,
-    name: siteConfig.brand,
-    alternateName: [siteConfig.name, siteConfig.nameEn],
-    url: siteConfig.url,
+    "@id": `${site.url}/#business`,
+    name: site.brand,
+    alternateName: [site.name, site.nameEn],
+    url: site.url,
     image: absoluteUrl("/brand/wael.jpg"),
     logo: {
       "@type": "ImageObject",
       url: absoluteUrl(DEFAULT_IMAGE),
     },
-    description: siteConfig.description,
-    email: siteConfig.email,
-    telephone: `+${siteConfig.phone}`,
-    founder: { "@id": `${siteConfig.url}/#person` },
+    description: site.description,
+    email: site.email,
+    telephone: `+${site.phone}`,
+    founder: { "@id": `${site.url}/#person` },
     address: {
       "@type": "PostalAddress",
       addressCountry: "SA",
@@ -122,24 +123,24 @@ export function businessJsonLd() {
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "customer service",
-      telephone: `+${siteConfig.phone}`,
-      email: siteConfig.email,
+      telephone: `+${site.phone}`,
+      email: site.email,
       url: absoluteUrl("/contact"),
       availableLanguage: ["Arabic", "ar"],
     },
   };
 }
 
-export function websiteJsonLd() {
+export function websiteJsonLd(site: SiteConfig = siteConfig) {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "@id": `${siteConfig.url}/#website`,
-    name: siteConfig.name,
-    url: siteConfig.url,
-    description: siteConfig.description,
+    "@id": `${site.url}/#website`,
+    name: site.name,
+    url: site.url,
+    description: site.description,
     inLanguage: "ar",
-    publisher: { "@id": `${siteConfig.url}/#business` },
+    publisher: { "@id": `${site.url}/#business` },
   };
 }
 
@@ -161,6 +162,7 @@ export function articleJsonLd(post: {
   description: string;
   slug: string;
   date: string;
+  updatedAt?: string | null;
 }) {
   const url = absoluteUrl(`/blog/${post.slug}`);
 
@@ -170,7 +172,7 @@ export function articleJsonLd(post: {
     headline: post.title,
     description: post.description,
     datePublished: post.date,
-    dateModified: post.date,
+    dateModified: post.updatedAt ?? post.date,
     inLanguage: "ar",
     mainEntityOfPage: url,
     url,

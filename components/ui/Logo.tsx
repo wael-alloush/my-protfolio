@@ -19,7 +19,7 @@ export function LogoMark({
       height={520}
       sizes="160px"
       loading={eager ? "eager" : "lazy"}
-      className={cn("aspect-[925/520] h-9 w-auto", className)}
+      className={cn("aspect-925/520 h-9 w-auto", className)}
     />
   );
 }
@@ -44,7 +44,7 @@ export function Logo({
     >
       <LogoMark
         eager={eager}
-        className="h-7 w-[3.12rem] shrink-0 sm:h-10 sm:w-[4.45rem]"
+        className="h-7 w-12.48 shrink-0 sm:h-10 sm:w-17.8"
       />
       <span className="flex min-w-0 flex-col items-start leading-none">
         <span className="max-w-full truncate text-sm font-medium min-[380px]:text-base sm:text-lg lg:text-2xl">
