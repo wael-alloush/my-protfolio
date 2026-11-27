@@ -21,7 +21,7 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden pb-12 pt-10 lg:pb-15.25 lg:pt-17">
-      <div className="glow-orb pointer-events-none absolute inset-x-0 top-0 mx-auto h-112 w-[min(100%,46rem)]" />
+      <div className="glow-orb pointer-events-none absolute inset-x-0 top-0 mx-auto h-96 w-[min(100%,40rem)] opacity-80" />
       <Container className="relative text-center">
         <motion.h1 {...rise(0)}>
           <span className="mx-auto block w-fit text-[1.875rem] font-extralight leading-[1.3] text-brand-cream sm:text-5xl sm:leading-[1.3] lg:text-[3.75rem] lg:leading-19.5">
@@ -48,7 +48,7 @@ export function Hero() {
             {hero.primaryCta}
             <span aria-hidden>←</span>
           </Button>
-          <Button href={hero.secondaryHref} variant="secondary" size="lg">
+          <Button href={hero.secondaryHref} variant="ghost" size="lg">
             {hero.secondaryCta}
           </Button>
         </motion.div>

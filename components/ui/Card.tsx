@@ -13,9 +13,9 @@ export function Card({
   return (
     <div
       className={cn(
-        "surface-border rounded-brand-lg p-6 shadow-soft",
+        "surface-border rounded-brand-lg p-6",
         interactive &&
-          "transition duration-brand hover:-translate-y-1 hover:shadow-medium",
+          "transition duration-brand hover:border-brand-secondary/80",
         className,
       )}
     >

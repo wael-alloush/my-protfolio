@@ -2,6 +2,7 @@
 
 import { Notice, Panel } from "@/components/admin/ui";
 import { Button } from "@/components/ui/Button";
+import type { ContentHeading } from "@/lib/admin/headings";
 import type { ActionResult } from "@/lib/admin/validate";
 import { cn } from "@/lib/cn";
 import type { Status } from "@/lib/content";
@@ -11,7 +12,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition, type ReactNode } from "react";
 
 export const inputClass =
-  "w-full rounded-brand-sm border border-brand-border bg-brand-background px-3.5 py-2.5 text-brand-cream transition duration-brand [color-scheme:dark] placeholder:text-brand-muted/60 focus:border-brand-accent focus:outline-none";
+  "w-full rounded-brand-sm border border-brand-border bg-brand-background px-3.5 py-2.5 text-brand-cream transition duration-brand [color-scheme:dark] placeholder:text-brand-muted/60 focus:border-brand-secondary focus:outline-none";
+
+export const toolButtonClass =
+  "h-9 rounded-pill border border-brand-border px-3 text-xs font-medium text-brand-cream transition duration-brand hover:border-brand-secondary hover:bg-brand-card/40 disabled:opacity-40";
 
 /**
  * حالة الحفظ المشتركة بين نماذج اللوحة: يرسل النموذج، يعرض الأخطاء،
@@ -85,7 +89,7 @@ export function Field({
           <span
             className={cn(
               "text-xs tabular-nums",
-              count.length > count.best ? "text-brand-accent" : "text-brand-muted",
+              count.length > count.best ? "text-brand-error" : "text-brand-muted",
             )}
             dir="ltr"
           >
@@ -250,7 +254,51 @@ export function StatusField({
 const BEST_TITLE = 60;
 const BEST_DESCRIPTION = 160;
 
-/** عنوان ووصف نتيجة البحث، مع معاينة لشكلها في Google. */
+/** هيكل العناوين كما تقرأه محركات البحث: H1 ثم H2/H3. */
+function HeadingOutline({
+  h1,
+  headings,
+  emptyHint,
+}: {
+  h1: string;
+  headings: ContentHeading[];
+  emptyHint: string;
+}) {
+  const h2Count = headings.filter((heading) => heading.level === 2).length;
+
+  return (
+    <div className="rounded-brand-lg border border-brand-border bg-brand-background p-4">
+      <p className="mb-2 text-meta text-brand-muted">هيكل العناوين (للسيو)</p>
+      <ol className="space-y-1.5 text-sm leading-7">
+        <li className="font-medium text-brand-cream">
+          <span className="me-2 text-xs text-brand-muted">H1</span>
+          {h1.trim() || "—"}
+        </li>
+        {headings.map((heading, index) => (
+          <li
+            key={`${heading.level}-${heading.text}-${index}`}
+            className={cn(
+              "text-brand-text-soft",
+              heading.level === 3 && "ps-4",
+            )}
+          >
+            <span className="me-2 text-xs text-brand-muted">H{heading.level}</span>
+            {heading.text}
+          </li>
+        ))}
+      </ol>
+      {h2Count === 0 ? (
+        <p className="mt-3 text-xs leading-6 text-brand-error">{emptyHint}</p>
+      ) : (
+        <p className="mt-3 text-xs leading-6 text-brand-muted">
+          {h2Count} عنوان H2 — جيد لتقسيم الصفحة وفهم جوجل للمحتوى.
+        </p>
+      )}
+    </div>
+  );
+}
+
+/** عنوان ووصف نتيجة البحث، مع معاينة لشكلها في Google وهيكل العناوين. */
 export function SeoPanel({
   section,
   slug,
@@ -261,6 +309,8 @@ export function SeoPanel({
   onSeoTitle,
   onSeoDescription,
   errors,
+  headings = [],
+  headingsHint,
 }: {
   section: string;
   slug: string;
@@ -272,30 +322,50 @@ export function SeoPanel({
   onSeoTitle: (value: string) => void;
   onSeoDescription: (value: string) => void;
   errors: Record<string, string>;
+  /** عناوين H2/H3 المستخرجة من المحتوى أو الأقسام */
+  headings?: ContentHeading[];
+  /** يظهر عند غياب أي H2 */
+  headingsHint: string;
 }) {
   const shownTitle = brandedTitle(seoTitle.trim() || title.trim() || "عنوان الصفحة");
   const shownDescription =
     seoDescription.trim() || description.trim() || "وصف الصفحة كما يظهر تحت العنوان.";
   const host = siteConfig.url.replace(/^https?:\/\//, "");
 
+  const stuffing =
+    (seoTitle.trim() || title).includes("|") &&
+    (seoTitle.trim() || title).split("|").length > 2;
+
   return (
     <Panel
       title="الظهور في محركات البحث"
-      description="اترك الحقلين فارغين ليُستخدم العنوان والوصف الأساسيان. اكتبهما فقط إذا أردت صيغة مختلفة لنتائج البحث."
+      description="العنوان والوصف لنتيجة Google، مع هيكل العناوين الفرعية H2/H3 من المحتوى."
     >
       <div className="space-y-5">
-        <div className="rounded-brand-sm border border-brand-border bg-brand-background p-4">
-          <p className="mb-2 text-xs text-brand-muted">معاينة النتيجة في Google</p>
+        <div className="rounded-brand-lg border border-brand-border bg-brand-background p-4">
+          <p className="mb-2 text-meta text-brand-muted">معاينة تقريبية في Google</p>
           <p dir="ltr" className="truncate text-end text-xs text-brand-muted">
             {host} › {section} › {slug || "…"}
           </p>
-          <p className="mt-1 line-clamp-1 text-lg font-medium text-brand-accent">
+          <p className="mt-1 line-clamp-1 text-lg font-medium text-[#8ab4f8]">
             {shownTitle}
           </p>
-          <p className="mt-1 line-clamp-2 text-sm leading-6 text-brand-muted">
+          <p className="mt-1 line-clamp-2 text-sm leading-6 text-brand-text-soft">
             {shownDescription}
           </p>
         </div>
+
+        <HeadingOutline
+          h1={title}
+          headings={headings}
+          emptyHint={headingsHint}
+        />
+
+        {stuffing ? (
+          <Notice tone="error">
+            العنوان يبدو محشواً بكلمات مفصولة بـ |. اختصر إلى عنوان واحد واضح.
+          </Notice>
+        ) : null}
 
         <TextField
           label="عنوان السيو"
@@ -305,7 +375,7 @@ export function SeoPanel({
           error={errors.seoTitle}
           best={BEST_TITLE}
           placeholder={title}
-          hint={`يُضاف إليه «| ${siteConfig.name}» تلقائياً. العنوان الكامل الآن ${shownTitle.length} حرفاً، والأفضل ألا يتجاوز ${BEST_TITLE} حتى لا يُقصّ.`}
+          hint={`يُضاف «| ${siteConfig.name}» تلقائياً. الطول الكامل الآن ${shownTitle.length} حرفاً — الأفضل ≤ ${BEST_TITLE}.`}
         />
         <TextField
           label="وصف السيو"
@@ -316,7 +386,7 @@ export function SeoPanel({
           best={BEST_DESCRIPTION}
           rows={3}
           placeholder={description}
-          hint={`جملة أو جملتان تشجّعان على النقر. الوصف المعروض الآن ${shownDescription.length} حرفاً، والأفضل بين 120 و${BEST_DESCRIPTION}.`}
+          hint={`جملة تدفع للنقر وتمثّل الصفحة بصدق. الطول الآن ${shownDescription.length} — الأفضل 120–${BEST_DESCRIPTION}. لا تكتب «استشارة مجانية» إن لم تكن جزءاً من عرضك.`}
         />
       </div>
     </Panel>

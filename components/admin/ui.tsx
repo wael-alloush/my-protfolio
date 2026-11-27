@@ -14,9 +14,9 @@ export function PageHeader({
   return (
     <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
       <div className="min-w-0">
-        <h1 className="text-2xl font-extrabold text-brand-cream sm:text-3xl">{title}</h1>
+        <h1 className="text-h2 text-brand-cream sm:text-[1.75rem]">{title}</h1>
         {description ? (
-          <p className="mt-1 text-sm text-brand-muted">{description}</p>
+          <p className="mt-1.5 max-w-2xl text-sm leading-7 text-brand-muted">{description}</p>
         ) : null}
       </div>
       {action}
@@ -38,15 +38,15 @@ export function Panel({
   return (
     <section
       className={cn(
-        "rounded-brand border border-brand-border bg-brand-surface p-5 sm:p-6",
+        "surface-border rounded-brand-xl p-5 sm:p-6",
         className,
       )}
     >
       {title ? (
         <div className="mb-5">
-          <h2 className="text-lg font-extrabold text-brand-cream">{title}</h2>
+          <h2 className="text-lg font-bold text-brand-cream">{title}</h2>
           {description ? (
-            <p className="mt-1 text-sm leading-6 text-brand-muted">{description}</p>
+            <p className="mt-1.5 text-sm leading-7 text-brand-muted">{description}</p>
           ) : null}
         </div>
       ) : null}
@@ -82,10 +82,10 @@ export function Notice({
     <div
       role={tone === "error" ? "alert" : "status"}
       className={cn(
-        "rounded-brand-sm border px-4 py-3 text-sm leading-7",
-        tone === "error" && "border-brand-error text-brand-error",
-        tone === "success" && "border-brand-accent text-brand-accent",
-        tone === "info" && "border-brand-border text-brand-muted",
+        "rounded-brand-lg border px-4 py-3 text-sm leading-7",
+        tone === "error" && "border-brand-error/80 text-brand-error",
+        tone === "success" && "border-brand-secondary text-brand-text-soft",
+        tone === "info" && "border-brand-border bg-brand-background/50 text-brand-muted",
       )}
     >
       {children}

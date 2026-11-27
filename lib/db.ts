@@ -1,6 +1,6 @@
 import { seedContent } from "@/lib/seed";
 import mysql from "mysql2/promise";
-import type { Pool, ResultSetHeader } from "mysql2/promise";
+import type { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
 type DbConfig = {
   host: string;
@@ -89,6 +89,7 @@ const SCHEMA = [
     image VARCHAR(255) NOT NULL,
     url VARCHAR(500) NOT NULL,
     points TEXT NOT NULL,
+    sections MEDIUMTEXT NOT NULL,
     featured TINYINT(1) NOT NULL,
     sort_order INT NOT NULL,
     status VARCHAR(16) NOT NULL,
@@ -112,11 +113,35 @@ const SCHEMA = [
   ) ${TABLE_OPTIONS}`,
 ];
 
+/** يضيف عموداً إن كان الجدول قديماً بلا هذا الحقل. */
+async function ensureColumn(
+  pool: Pool,
+  table: string,
+  column: string,
+  definition: string,
+) {
+  const [rows] = await pool.query<RowDataPacket[]>(
+    `SELECT 1 AS ok FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?
+     LIMIT 1`,
+    [table, column],
+  );
+  if (rows.length === 0) {
+    await pool.query(`ALTER TABLE \`${table}\` ADD COLUMN \`${column}\` ${definition}`);
+  }
+}
+
 /** ينشئ الجداول، وينقل محتوى الملفات الحالي إليها مرة واحدة فقط. */
 async function migrate(pool: Pool) {
   for (const statement of SCHEMA) {
     await pool.query(statement);
   }
+
+  // قواعد موجودة قبل دعم عناوين H2 للمشاريع.
+  await ensureColumn(pool, "wa_projects", "sections", "MEDIUMTEXT NULL");
+  await pool.query(
+    "UPDATE wa_projects SET sections = '[]' WHERE sections IS NULL OR sections = ''",
+  );
 
   const connection = await pool.getConnection();
   try {

@@ -61,17 +61,15 @@ export function PortfolioShowcase({ projects }: { projects: Project[] }) {
         <Reveal>
           <div className="surface-border relative flex flex-col overflow-hidden rounded-brand-lg lg:h-98.75 lg:flex-row">
             <div className="relative z-10 flex shrink-0 flex-col items-start px-7 py-10 text-start lg:w-[36%] lg:pb-0 lg:pe-0 lg:ps-6.25 lg:pt-25.25">
-              <p className="flex h-7.75 items-center rounded-[7px] bg-brand-accent px-4.25 text-sm font-medium text-brand-dark">
-                {portfolio.badge}
-              </p>
-              <h2 className="mt-2 text-[1.75rem] leading-[1.4] sm:text-4xl sm:leading-[1.4] lg:mt-0 lg:text-[2.5625rem] lg:leading-14.625">
+              <p className="badge-accent">{portfolio.badge}</p>
+              <h2 className="mt-3 text-h2 sm:text-[2rem] lg:mt-1 lg:text-[2.4rem]">
                 <HeadingLines lines={portfolio.titleLines} />
               </h2>
               <Button
                 href="/portfolio"
                 variant="secondary"
                 size="lg"
-                className="mt-5 lg:mt-3.75"
+                className="mt-5 lg:mt-4"
               >
                 {portfolio.cta}
                 <span aria-hidden>←</span>

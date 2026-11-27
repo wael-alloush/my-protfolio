@@ -11,7 +11,15 @@ import {
   TextField,
   useEditor,
 } from "@/components/admin/fields";
+import { ContentTips } from "@/components/admin/ContentTips";
+import {
+  SectionsEditor,
+  sectionsFromSaved,
+  serializeSections,
+  type SectionDraft,
+} from "@/components/admin/SectionsEditor";
 import { Panel } from "@/components/admin/ui";
+import { headingsFromTitles } from "@/lib/admin/headings";
 import { cn } from "@/lib/cn";
 import type { Project } from "@/lib/content";
 import Image from "next/image";
@@ -74,6 +82,9 @@ export function ProjectForm({
     seoTitle: project?.seoTitle ?? "",
     seoDescription: project?.seoDescription ?? "",
   });
+  const [sections, setSections] = useState<SectionDraft[]>(() =>
+    sectionsFromSaved(project?.sections ?? []),
+  );
   const [upload, setUpload] = useState<{ blob: Blob; url: string } | null>(null);
   const [imageError, setImageError] = useState("");
   const [preparing, setPreparing] = useState(false);
@@ -108,11 +119,13 @@ export function ProjectForm({
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
+    form.set("sections", serializeSections(sections));
     if (upload) form.set("imageFile", upload.blob, "image");
     editor.save(form);
   }
 
   const errors = editor.fields;
+  const headings = headingsFromTitles(sections.map((section) => section.title));
   const shownImage = upload?.url ?? project?.image ?? "";
   const shownImageError = imageError || errors.image;
 
@@ -120,14 +133,17 @@ export function ProjectForm({
     <form onSubmit={submit} onChange={editor.touch} className="space-y-6" noValidate>
       {project?.id ? <input type="hidden" name="id" value={project.id} /> : null}
 
+      <ContentTips kind="project" />
+
       <Panel title="المشروع">
         <div className="space-y-5">
           <TextField
-            label="اسم المشروع"
+            label="اسم المشروع (H1)"
             name="name"
             value={values.name}
             onChange={set("name")}
             error={errors.name}
+            hint="اسم العميل أو المشروع كما يظهر في المعرض."
           />
           <SlugField
             section="portfolio"
@@ -144,7 +160,7 @@ export function ProjectForm({
             error={errors.summary}
             rows={4}
             best={160}
-            hint="تظهر في صفحة المشروع، وتُستخدم وصفاً في نتائج البحث ما لم تكتب وصف سيو مختلفاً."
+            hint="صف مشروعاً منشوراً فعلياً (مدينة، وظيفة، حجز…). تظهر في صفحة المشروع وللسيو إن تركت وصف السيو فارغاً."
           />
           <div className="grid gap-5 sm:grid-cols-2">
             <Field label="التصنيف" error={errors.category}>
@@ -179,7 +195,7 @@ export function ProjectForm({
             value={values.points}
             onChange={set("points")}
             rows={3}
-            hint="ميزة في كل سطر. تظهر كوسوم قصيرة في صفحة المشروع."
+            hint="ميزة ملموسة في كل سطر (حجز استشارة، قائمة رقمية…) لا عبارات عامة."
           />
         </div>
       </Panel>
@@ -228,6 +244,16 @@ export function ProjectForm({
         </div>
       </Panel>
 
+      <SectionsEditor
+        sections={sections}
+        onChange={(next) => {
+          setSections(next);
+          editor.touch();
+        }}
+        error={errors.sections}
+        emptyHint="اختياري لكن مفيد للسيو: أضف H2 مثل «ما الذي بُني» أو «نتيجة المشروع»."
+      />
+
       <Panel title="العرض في الموقع">
         <div className="grid gap-5 sm:grid-cols-2">
           <TextField
@@ -272,6 +298,8 @@ export function ProjectForm({
         onSeoTitle={set("seoTitle")}
         onSeoDescription={set("seoDescription")}
         errors={errors}
+        headings={headings}
+        headingsHint="لا توجد عناوين H2 بعد. أضفها من قسم «العناوين الفرعية» أعلاه."
       />
 
       <FormActions

@@ -44,9 +44,9 @@ export function Header({ whatsappUrl }: { whatsappUrl: string }) {
                 ) : null}
                 <NavLink
                   href={link.href}
-                  className="px-2 py-1.5 text-sm font-light transition duration-brand hover:text-brand-accent"
-                  idleClassName="text-brand-cream/85"
-                  activeClassName="text-brand-accent"
+                  className="px-2 py-1.5 text-sm font-light transition duration-brand hover:text-brand-cream"
+                  idleClassName="text-brand-cream/80"
+                  activeClassName="font-medium text-brand-accent"
                 >
                   {link.label}
                 </NavLink>
@@ -59,14 +59,14 @@ export function Header({ whatsappUrl }: { whatsappUrl: string }) {
               href={whatsappUrl}
               variant="primary"
               size="sm"
-              className="h-8! px-2.5! text-xs! sm:h-9! sm:px-3.5! sm:text-sm!"
+              className="px-3.5 sm:px-5"
               onClick={() => setMobileOpen(false)}
             >
               {nav.contact}
             </Button>
             <button
               type="button"
-              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-pill text-brand-cream transition duration-brand hover:text-brand-accent sm:h-11 sm:w-11 lg:hidden"
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-pill text-brand-cream transition duration-brand hover:text-brand-cream/90 lg:hidden"
               aria-label={mobileOpen ? "إغلاق القائمة" : "فتح القائمة"}
               aria-expanded={mobileOpen}
               aria-controls="mobile-drawer"
@@ -117,8 +117,8 @@ export function Header({ whatsappUrl }: { whatsappUrl: string }) {
             <NavLink
               key={link.href}
               href={link.href}
-              className="rounded-pill px-4 py-3 font-medium transition duration-brand hover:bg-brand-cream/5 hover:text-brand-accent"
-              activeClassName="text-brand-accent"
+              className="rounded-pill px-4 py-3 font-medium transition duration-brand hover:bg-brand-cream/5 hover:text-brand-cream"
+              activeClassName="bg-brand-card/60 text-brand-accent"
               onClick={() => setMobileOpen(false)}
             >
               {link.label}

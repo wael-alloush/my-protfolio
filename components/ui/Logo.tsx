@@ -17,7 +17,7 @@ export function LogoMark({
       alt=""
       width={925}
       height={520}
-      sizes="160px"
+      sizes="(max-width: 640px) 50px, 72px"
       loading={eager ? "eager" : "lazy"}
       className={cn("aspect-925/520 h-9 w-auto", className)}
     />

@@ -14,7 +14,7 @@ export type TextSegment = { readonly text: string; readonly tone?: TextTone };
 
 export const home = {
   hero: {
-    line1: "أصمّم مواقع",
+    line1: "أصمّم مواقع الكترونية",
     line2: { before: "تسهّل الحجز وتزيد", accent: "الطلبات" },
     body: [
       { text: "أنا " },
@@ -51,6 +51,8 @@ export const home = {
         title: "موقع بمحتوى ووظيفة تناسبك",
         description:
           "أبني لك موقع الكتروني يعرض خدماتك ويوجّه الزائر لخطوة واضحة: حجز استشارة أو تواصل واتساب، بدل صفحات عامة بلا هدف.",
+        href: "/services/corporate-websites",
+        linkLabel: "تفاصيل الخدمة",
         featured: false,
       },
       {
@@ -66,6 +68,7 @@ export const home = {
         description:
           "ألوانك وشعارك وأسلوبك في الواجهة، مع ترتيب يسهّل قراءة الخدمات على الجوال قبل أي شيء آخر.",
         href: "/services",
+        linkLabel: "كل الخدمات",
         featured: false,
       },
     ],
@@ -154,7 +157,7 @@ export const home = {
 } as const;
 
 export const footer = {
-  credit: "مصمم ومطور الموقع:",
+  credit: "مصمم ومطور المواقع:",
   copyright: "جميع الحقوق محفوظة",
   linksTitle: "روابط الموقع:",
   links: [
@@ -207,7 +210,7 @@ export const servicesPage = {
 export const portfolioPage = {
   title: "نماذج من مواقع صمّمتها",
   subtitle:
-    "من عيادة تقويم أسنان إلى مكتب محاماة ومطعم — مواقع منشورة يمكن فتحها ومراجعتها بنفسك.",
+    "من عيادة تقويم أسنان إلى مطعم وشركة استشارات مالية — مواقع منشورة يمكن فتحها ومراجعتها بنفسك.",
   filterAll: "الكل",
   categories: ["موقع الكتروني متكامل", "صفحة هبوط", "نظام مخصص"],
   empty: "لا توجد أعمال في هذا التصنيف بعد.",
@@ -222,6 +225,11 @@ export const blogPage = {
   subtitle:
     "مقالات عن اختيار مصمم مواقع في السعودية، تكلفة الموقع، صفحات الهبوط، ومتى تحتاج تصميم متجر الكتروني.",
   readMore: "اقرأ المقالة",
+  postCtaTitle: "هل تريد موقعاً واضحاً على الجوال؟",
+  postCtaBody:
+    "حدّد هدفك عبر واتساب، ونتفق على النطاق والسعر قبل البدء.",
+  postCtaWhatsapp: "اطلب تصميم موقعك",
+  postCtaBack: "العودة للمدونة",
 } as const;
 
 export const common = {

@@ -9,12 +9,12 @@ export function About() {
   const { about } = home;
 
   return (
-    <section className="relative overflow-hidden pt-20 lg:pt-36.25">
-      <div className="glow-orb pointer-events-none absolute inset-x-0 top-0 mx-auto h-112 w-[min(100%,46rem)]" />
+    <section className="relative overflow-hidden pt-20 lg:pt-32">
+      <div className="glow-orb pointer-events-none absolute inset-x-0 top-0 mx-auto h-96 w-[min(100%,40rem)] opacity-70" />
 
       <Container className="relative text-center">
         <Reveal>
-          <div className="relative mx-auto h-38.25 w-38.25 overflow-hidden rounded-full border-2 border-brand-accent bg-brand-primary">
+          <div className="relative mx-auto h-38.25 w-38.25 overflow-hidden rounded-full border-2 border-brand-secondary bg-brand-primary">
             <Image
               src="/brand/wael.jpg"
               alt={`${about.photoAlt}: ${siteConfig.name}`}

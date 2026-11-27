@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import { FinalCta } from "@/components/sections/FinalCta";
 import { Section } from "@/components/ui/Section";
 import { common } from "@/content/ar";
@@ -88,6 +89,34 @@ export default async function ProjectPage({ params }: Props) {
           </div>
         </div>
       </Section>
+      {project.sections.length > 0 ? (
+        <Section className="bg-brand-surface">
+          <div className="mx-auto max-w-3xl space-y-5">
+            {project.sections.map((section) => (
+              <Card key={section.title}>
+                <h2 className="text-xl font-extrabold text-brand-cream">
+                  {section.title}
+                </h2>
+                {section.body ? (
+                  <p className="mt-3 leading-8 text-brand-muted">{section.body}</p>
+                ) : null}
+                {section.bullets && section.bullets.length > 0 ? (
+                  <ul className="mt-4 space-y-2 text-brand-muted">
+                    {section.bullets.map((item) => (
+                      <li key={item} className="flex gap-2 leading-7">
+                        <span className="text-brand-secondary" aria-hidden>
+                          •
+                        </span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+              </Card>
+            ))}
+          </div>
+        </Section>
+      ) : null}
       <FinalCta
         title={`هل تريد مشروعاً مشابهاً لـ ${project.name}؟`}
         button={common.requestCta}

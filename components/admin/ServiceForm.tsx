@@ -1,6 +1,7 @@
 "use client";
 
 import { saveService } from "@/app/admin/actions";
+import { ContentTips } from "@/components/admin/ContentTips";
 import {
   FormActions,
   SeoPanel,
@@ -9,16 +10,18 @@ import {
   TextField,
   useEditor,
 } from "@/components/admin/fields";
+import {
+  SectionsEditor,
+  sectionsFromSaved,
+  serializeSections,
+  type SectionDraft,
+} from "@/components/admin/SectionsEditor";
 import { Panel } from "@/components/admin/ui";
+import { headingsFromTitles } from "@/lib/admin/headings";
 import type { Service } from "@/lib/content";
 import { useState, type FormEvent } from "react";
 
 const LIST = "/admin/services";
-
-type SectionDraft = { key: number; title: string; body: string; bullets: string };
-
-const smallButton =
-  "h-8 rounded-pill border border-brand-border px-3 text-xs font-medium text-brand-cream transition duration-brand hover:border-brand-accent hover:text-brand-accent disabled:opacity-40";
 
 export function ServiceForm({
   service,
@@ -43,72 +46,40 @@ export function ServiceForm({
     seoDescription: service?.seoDescription ?? "",
   });
   const [sections, setSections] = useState<SectionDraft[]>(() =>
-    (service?.sections ?? []).map((section, index) => ({
-      key: index,
-      title: section.title,
-      body: section.body ?? "",
-      bullets: (section.bullets ?? []).join("\n"),
-    })),
+    sectionsFromSaved(service?.sections ?? []),
   );
-  const [nextKey, setNextKey] = useState(sections.length);
 
   function set<K extends keyof typeof values>(key: K) {
     return (value: (typeof values)[K]) =>
       setValues((current) => ({ ...current, [key]: value }));
   }
 
-  function editSection(key: number, patch: Partial<SectionDraft>) {
-    setSections((current) =>
-      current.map((section) => (section.key === key ? { ...section, ...patch } : section)),
-    );
-  }
-
-  function addSection() {
-    setSections((current) => [...current, { key: nextKey, title: "", body: "", bullets: "" }]);
-    setNextKey(nextKey + 1);
-    editor.touch();
-  }
-
-  function removeSection(key: number) {
-    setSections((current) => current.filter((section) => section.key !== key));
-    editor.touch();
-  }
-
-  function moveSection(index: number, step: -1 | 1) {
-    setSections((current) => {
-      const target = index + step;
-      if (target < 0 || target >= current.length) return current;
-      const next = [...current];
-      [next[index], next[target]] = [next[target], next[index]];
-      return next;
-    });
-    editor.touch();
-  }
-
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    form.set(
-      "sections",
-      JSON.stringify(sections.map(({ title, body, bullets }) => ({ title, body, bullets }))),
-    );
+    form.set("sections", serializeSections(sections));
     editor.save(form);
   }
 
   const errors = editor.fields;
+  const headings = headingsFromTitles(sections.map((section) => section.title));
 
   return (
     <form onSubmit={submit} onChange={editor.touch} className="space-y-6" noValidate>
       {service?.id ? <input type="hidden" name="id" value={service.id} /> : null}
 
+      <ContentTips kind="service" />
+
       <Panel title="الخدمة">
         <div className="space-y-5">
           <TextField
-            label="اسم الخدمة"
+            label="اسم الخدمة (H1)"
             name="title"
             value={values.title}
             onChange={set("title")}
             error={errors.title}
+            best={70}
+            hint="مثال: تصميم مواقع للشركات والعيادات — نية واضحة بلا حشو."
           />
           <SlugField
             section="services"
@@ -125,7 +96,7 @@ export function ServiceForm({
             error={errors.description}
             rows={3}
             best={160}
-            hint="يظهر تحت اسم الخدمة في صفحتها، ويُستخدم وصفاً في نتائج البحث ما لم تكتب وصف سيو مختلفاً."
+            hint="يظهر تحت الاسم في PageHero ويُستخدم للبحث إن تركت وصف السيو فارغاً. ركّز على الحجز أو واتساب أو وضوح الجوال."
           />
           <TextField
             label="المقدمة"
@@ -134,7 +105,7 @@ export function ServiceForm({
             onChange={set("intro")}
             error={errors.intro}
             rows={5}
-            hint="فقرة تشرح الخدمة ولمن تناسب، تظهر قبل الأقسام."
+            hint="لمن الخدمة وكيف نعمل (متطلبات → واجهات → تطوير → نشر ودعم) دون وعود ترتيب في جوجل."
           />
           <TextField
             label="المزايا المختصرة"
@@ -142,7 +113,7 @@ export function ServiceForm({
             value={values.points}
             onChange={set("points")}
             rows={4}
-            hint="ميزة في كل سطر. تظهر كوسوم قصيرة أعلى صفحة الخدمة."
+            hint="ميزة ملموسة في كل سطر (مثل مسار حجز أو واتساب)، تظهر كوسوم أعلى الصفحة."
           />
           <div className="grid gap-5 sm:grid-cols-2">
             <TextField
@@ -160,78 +131,15 @@ export function ServiceForm({
         </div>
       </Panel>
 
-      <Panel
-        title="أقسام الصفحة"
-        description="كل قسم بطاقة في صفحة الخدمة: عنوان، ثم نص أو نقاط أو كلاهما."
-      >
-        <div className="space-y-4">
-          {sections.map((section, index) => (
-            <div
-              key={section.key}
-              role="group"
-              aria-label={`القسم ${index + 1}`}
-              className="space-y-4 rounded-brand-sm border border-brand-border bg-brand-background p-4"
-            >
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-sm font-medium text-brand-accent">القسم {index + 1}</p>
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    className={smallButton}
-                    disabled={index === 0}
-                    onClick={() => moveSection(index, -1)}
-                  >
-                    للأعلى
-                  </button>
-                  <button
-                    type="button"
-                    className={smallButton}
-                    disabled={index === sections.length - 1}
-                    onClick={() => moveSection(index, 1)}
-                  >
-                    للأسفل
-                  </button>
-                  <button
-                    type="button"
-                    className="h-8 px-2 text-xs font-medium text-brand-error hover:underline"
-                    onClick={() => removeSection(section.key)}
-                  >
-                    حذف القسم
-                  </button>
-                </div>
-              </div>
-              <TextField
-                label="عنوان القسم"
-                value={section.title}
-                onChange={(title) => editSection(section.key, { title })}
-              />
-              <TextField
-                label="النص"
-                value={section.body}
-                onChange={(body) => editSection(section.key, { body })}
-                rows={3}
-              />
-              <TextField
-                label="النقاط"
-                value={section.bullets}
-                onChange={(bullets) => editSection(section.key, { bullets })}
-                rows={4}
-                hint="نقطة في كل سطر."
-              />
-            </div>
-          ))}
-
-          {errors.sections ? (
-            <p role="alert" className="text-sm text-brand-error">
-              {errors.sections}
-            </p>
-          ) : null}
-
-          <button type="button" className={smallButton} onClick={addSection}>
-            + إضافة قسم
-          </button>
-        </div>
-      </Panel>
+      <SectionsEditor
+        sections={sections}
+        onChange={(next) => {
+          setSections(next);
+          editor.touch();
+        }}
+        error={errors.sections}
+        emptyHint="أضف عنوانين H2 على الأقل يشرحان النتيجة أو الأسئلة الشائعة حول الخدمة."
+      />
 
       <Panel
         title="بطاقة الخدمة في صفحة الخدمات"
@@ -245,6 +153,7 @@ export function ServiceForm({
             onChange={set("cardTitle")}
             error={errors.cardTitle}
             placeholder={values.title}
+            hint="أقصر من اسم الصفحة إن أمكن — يظهر في شبكة /services."
           />
           <TextField
             label="وصف البطاقة"
@@ -254,6 +163,7 @@ export function ServiceForm({
             error={errors.cardDescription}
             rows={3}
             placeholder={values.description}
+            hint="سطر أو سطران عن النتيجة للعميل، بلا تكرار كامل للوصف الطويل."
           />
         </div>
       </Panel>
@@ -268,6 +178,8 @@ export function ServiceForm({
         onSeoTitle={set("seoTitle")}
         onSeoDescription={set("seoDescription")}
         errors={errors}
+        headings={headings}
+        headingsHint="لا توجد عناوين H2 بعد. أضفها من قسم «العناوين الفرعية» أعلاه."
       />
 
       <FormActions

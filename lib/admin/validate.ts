@@ -176,6 +176,7 @@ export function parseProject(form: FormData): Parsed<Omit<ProjectInput, "image">
     summary: read.required("summary", 600),
     url,
     points: read.list("points"),
+    sections: parseSections(form, read.errors),
     featured: text(form, "featured") === "1",
     sortOrder: read.sortOrder(),
     status: read.status(),

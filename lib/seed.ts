@@ -55,8 +55,8 @@ export async function seedContent(connection: PoolConnection, now: string) {
   for (const [index, project] of projects.entries()) {
     await connection.query(
       `INSERT IGNORE INTO wa_projects
-        (slug, name, category, summary, image, url, points, featured, sort_order, status, seo_title, seo_description, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'published', '', '', ?)`,
+        (slug, name, category, summary, image, url, points, sections, featured, sort_order, status, seo_title, seo_description, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'published', '', '', ?)`,
       [
         project.slug,
         project.name,
@@ -65,6 +65,7 @@ export async function seedContent(connection: PoolConnection, now: string) {
         project.image,
         project.url ?? "",
         JSON.stringify(project.points ?? []),
+        "[]",
         project.featured ? 1 : 0,
         index + 1,
         now,

@@ -6,7 +6,10 @@
  * المكوّنات لا تكتب ألواناً أو خطوطاً مباشرة، بل تستخدم هذه التوكنز.
  */
 :root {
-  /* لوحة الهوية */
+  /*
+   * أدوار بصرية (60/30/10) — ألوان الهوية الستة ثابتة لا تُستبدل:
+   * 60% canvas = --brand-bg | 30% surfaces = surface/card | 10% accent = CTAs نادرة فقط
+   */
   --brand-primary: #0d3b34;
   --brand-secondary: #2f6b5c;
   --brand-accent: #e3b341;
@@ -25,10 +28,11 @@
   --brand-card: color-mix(in srgb, var(--brand-primary) 46%, var(--brand-bg));
   --brand-raised: color-mix(in srgb, var(--brand-primary) 66%, var(--brand-bg));
   --brand-muted: color-mix(in srgb, var(--brand-cream) 68%, var(--brand-bg));
+  --brand-text-soft: color-mix(in srgb, var(--brand-cream) 82%, var(--brand-bg));
   --brand-border: color-mix(in srgb, var(--brand-secondary) 62%, var(--brand-bg));
   --brand-accent-light: color-mix(in srgb, var(--brand-accent) 78%, var(--brand-cream));
   --brand-accent-deep: color-mix(in srgb, var(--brand-accent) 80%, var(--brand-primary));
-  --brand-glow: color-mix(in srgb, var(--brand-secondary) 58%, transparent);
+  --brand-glow: color-mix(in srgb, var(--brand-secondary) 40%, transparent);
   --brand-success: var(--brand-secondary);
   /* لون وظيفي لرسائل الخطأ في النماذج (لا يوجد أحمر في لوحة الهوية) */
   --brand-error: #f04438;
@@ -42,12 +46,28 @@
 
   --shadow-soft: 0 10px 40px color-mix(in srgb, black 35%, transparent);
   --shadow-medium: 0 24px 60px color-mix(in srgb, black 50%, transparent);
-  --shadow-glow: 0 14px 34px -8px color-mix(in srgb, var(--brand-accent) 55%, transparent);
+  --shadow-glow: 0 14px 34px -8px color-mix(in srgb, var(--brand-accent) 45%, transparent);
 
+  /* سلم مسافات 4px */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
   --space-section: clamp(4rem, 9vw, 7.5rem);
+  --space-section-sm: clamp(3rem, 6vw, 5rem);
+
   --text-display: clamp(2.25rem, 5vw, 3.75rem);
   --text-title: clamp(1.75rem, 3.4vw, 2.625rem);
+  --text-h2: clamp(1.5rem, 3vw, 2.25rem);
+  --text-h3: clamp(1.2rem, 2vw, 1.5rem);
+  --text-lead: clamp(1.0625rem, 1.4vw, 1.1875rem);
   --text-body: 1rem;
+  --text-meta: 0.8125rem;
 }
 
 @theme inline {
@@ -64,6 +84,7 @@
   --color-brand-raised: var(--brand-raised);
   --color-brand-dark: var(--brand-dark);
   --color-brand-muted: var(--brand-muted);
+  --color-brand-text-soft: var(--brand-text-soft);
   --color-brand-border: var(--brand-border);
   --color-brand-glow: var(--brand-glow);
   --color-brand-success: var(--brand-success);
@@ -142,12 +163,67 @@
     font-weight: 800;
   }
 
+  .text-h2 {
+    font-size: var(--text-h2);
+    line-height: 1.35;
+    font-weight: 800;
+  }
+
+  .text-h3 {
+    font-size: var(--text-h3);
+    line-height: 1.4;
+    font-weight: 700;
+  }
+
+  .text-lead {
+    font-size: var(--text-lead);
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .text-meta {
+    font-size: var(--text-meta);
+    line-height: 1.4;
+    font-weight: 500;
+  }
+
   .section-space {
     padding-block: var(--space-section);
   }
 
+  .section-space-sm {
+    padding-block: var(--space-section-sm);
+  }
+
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* شارة ذهبية نادرة (عنصر محوري واحد في القسم) */
+  .badge-accent {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    border-radius: var(--radius-brand-sm);
+    background: var(--brand-accent);
+    padding-inline: var(--space-4);
+    font-size: var(--text-meta);
+    font-weight: 500;
+    color: var(--brand-dark);
+  }
+
+  /* شارة هادئة للأقسام الثانوية */
+  .badge-quiet {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--brand-border);
+    background: color-mix(in srgb, var(--brand-card) 70%, transparent);
+    padding-inline: var(--space-3);
+    font-size: var(--text-meta);
+    font-weight: 500;
+    color: var(--brand-cream);
   }
 
   /* بطاقة بحدّ متدرّج: تعبئة خضراء داكنة تتلاشى إلى خلفية الصفحة */

@@ -6,9 +6,9 @@ import { activeSocialLinks } from "@/lib/site";
 import Link from "next/link";
 
 export const metadata = createMetadata({
-  title: "تواصل",
+  title: "تواصل لطلب تصميم موقع",
   description:
-    "تواصل مع وائل العلوش مباشرة عبر واتساب لطلب تصميم موقع. الهاتف والبريد وحسابات التواصل متاحة أيضاً.",
+    "راسل وائل العلوش عبر واتساب لطلب تصميم موقع في السعودية. الهاتف والبريد وحسابات التواصل متاحة أيضاً.",
   path: "/contact",
 });
 

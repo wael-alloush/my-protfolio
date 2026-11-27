@@ -17,7 +17,7 @@ export function PortfolioGrid({ projects }: { projects: Project[] }) {
       : projects.filter((project) => project.category === active);
 
   return (
-    <section className="section-space">
+    <section className="pb-[var(--space-section)]">
       <div className="mx-auto w-full max-w-site px-4 sm:px-6">
         <div className="mb-8 flex flex-wrap justify-center gap-3">
           {categories.map((category) => {
@@ -29,9 +29,9 @@ export function PortfolioGrid({ projects }: { projects: Project[] }) {
                 onClick={() => setActive(category)}
                 className={cn(
                   "h-10 rounded-pill px-5 text-sm font-medium transition duration-brand",
-                  selected
-                    ? "fill-accent-gradient text-brand-dark shadow-glow"
-                    : "border border-brand-border text-brand-cream hover:border-brand-accent hover:text-brand-accent",
+                    selected
+                      ? "fill-accent-gradient text-brand-dark shadow-glow"
+                      : "border border-brand-border text-brand-cream hover:border-brand-secondary",
                 )}
                 aria-pressed={selected}
               >

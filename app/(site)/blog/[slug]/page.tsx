@@ -1,10 +1,13 @@
 import { MdxContent } from "@/components/blog/MdxContent";
+import { PostCta } from "@/components/blog/PostCta";
+import { PageHero } from "@/components/sections/PageHero";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { Button } from "@/components/ui/Button";
-import { Section } from "@/components/ui/Section";
+import { Container } from "@/components/ui/Container";
 import { getPost, getPosts } from "@/lib/content";
 import { formatDate } from "@/lib/format";
 import { articleJsonLd, breadcrumbJsonLd, createMetadata } from "@/lib/seo";
+import { getSiteConfig } from "@/lib/settings";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -32,9 +35,10 @@ export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
   const post = await getPost(slug);
   if (!post) notFound();
+  const site = await getSiteConfig();
 
   return (
-    <Section className="bg-brand-surface">
+    <>
       <JsonLd
         data={[
           articleJsonLd(post),
@@ -45,23 +49,31 @@ export default async function BlogPostPage({ params }: Props) {
           ]),
         ]}
       />
-      <article className="mx-auto max-w-3xl">
-        <p className="text-sm text-brand-muted">
+
+      <PageHero title={post.title} subtitle={post.description}>
+        <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-brand-muted">
+          <span className="badge-quiet">{post.category}</span>
+          <span className="font-medium text-brand-cream/85">{site.name}</span>
+          <span aria-hidden>·</span>
           <time dateTime={post.date}>{formatDate(post.date)}</time>
-          {" · "}
-          {post.readingTime}
-        </p>
-        <h1 className="mt-3 text-display text-balance text-brand-cream">
-          {post.title}
-        </h1>
-        <p className="mt-4 text-lg text-brand-muted">{post.description}</p>
-        <div className="mt-10">
-          <MdxContent content={post.content} />
+          <span aria-hidden>·</span>
+          <span>{post.readingTime}</span>
         </div>
-        <Button href="/blog" variant="secondary" className="mt-12">
-          العودة للمدونة
-        </Button>
-      </article>
-    </Section>
+      </PageHero>
+
+      <section className="pb-16 pt-4 sm:pb-20 lg:pb-24">
+        <Container>
+          <div className="mx-auto max-w-3xl">
+            <MdxContent content={post.content} />
+            <PostCta slug={post.slug} />
+            <p className="mt-10 text-sm text-brand-muted">
+              <Link href="/blog" className="transition duration-brand hover:text-brand-accent">
+                ← العودة للمدونة
+              </Link>
+            </p>
+          </div>
+        </Container>
+      </section>
+    </>
   );
 }

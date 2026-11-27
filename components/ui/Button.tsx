@@ -9,17 +9,17 @@ const variants: Record<Variant, string> = {
   primary:
     "fill-accent-gradient text-brand-dark shadow-glow hover:-translate-y-0.5 hover:brightness-105",
   secondary:
-    "border border-brand-border bg-brand-card text-brand-cream hover:border-brand-accent hover:text-brand-accent",
+    "border border-brand-border bg-brand-card/80 text-brand-cream hover:border-brand-secondary hover:text-brand-cream",
   ghost:
-    "bg-transparent text-brand-cream/90 hover:bg-brand-cream/10 hover:text-brand-accent",
+    "bg-transparent text-brand-cream/90 hover:bg-brand-cream/8 hover:text-brand-cream",
   outline:
-    "border border-brand-cream/20 bg-transparent text-brand-cream hover:border-brand-accent hover:text-brand-accent",
+    "border border-brand-cream/25 bg-transparent text-brand-cream hover:border-brand-cream/50 hover:bg-brand-cream/5",
 };
 
 const sizes: Record<Size, string> = {
-  sm: "h-10 px-5 text-sm",
-  md: "h-12.5 px-7 text-base",
-  lg: "h-12.5 px-7 text-base sm:px-8",
+  sm: "min-h-11 h-11 px-5 text-sm",
+  md: "min-h-12 h-12 px-7 text-base",
+  lg: "min-h-12 h-12 px-7 text-base sm:min-h-13 sm:h-13 sm:px-8",
 };
 
 type CommonProps = {

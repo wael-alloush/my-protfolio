@@ -1,63 +1,122 @@
+import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { Logo } from "@/components/ui/Logo";
 import { NavLink } from "@/components/ui/NavLink";
-import { footer } from "@/content/ar";
+import { footer, nav } from "@/content/ar";
 import { activeSocialLinks, type SiteConfig } from "@/lib/site";
 import type { ReactNode } from "react";
 
 export function Footer({ site }: { site: SiteConfig }) {
   const year = new Date().getFullYear();
   const social = activeSocialLinks(site);
+  const phone = site.phone ? `+${site.phone}` : "";
 
   return (
-    <footer className="bg-brand-surface text-brand-cream">
-      <Container className="grid gap-10 py-12 md:grid-cols-[4fr_3fr_3fr] md:gap-0 md:pb-10 md:pt-12">
-        <div className="md:px-2.5">
-          <p className="text-lg leading-8">
-            {footer.credit} {site.name}
-          </p>
-          <p className="mt-2.5 text-[0.8125rem] font-light leading-5.5 text-brand-muted">
-            © {year} {footer.copyright}
-          </p>
+    <footer className="border-t border-brand-border bg-brand-surface text-brand-cream">
+      <Container className="py-12 sm:py-14 lg:py-16">
+        <div className="grid gap-10 lg:grid-cols-[1.35fr_1fr_1.1fr] lg:gap-12">
+          <div className="max-w-sm">
+            <Logo />
+            <p className="mt-4 text-sm leading-7 text-brand-muted">
+              {site.brandTagline}
+            </p>
+            <p className="mt-5 text-sm text-brand-text-soft">
+              {footer.credit}{" "}
+              <span className="font-medium text-brand-cream">{site.name}</span>
+            </p>
+          </div>
+
+          <nav aria-label={footer.linksTitle}>
+            <h2 className="text-meta font-medium text-brand-cream">
+              {footer.linksTitle.replace(/:$/, "")}
+            </h2>
+            <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-1">
+              {footer.links.map((link) => (
+                <li key={link.href}>
+                  <NavLink
+                    href={link.href}
+                    className="inline-flex min-h-10 items-center text-sm transition duration-brand hover:text-brand-cream"
+                    idleClassName="text-brand-muted"
+                    activeClassName="font-medium text-brand-accent"
+                  >
+                    {link.label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div>
+            <h2 className="text-meta font-medium text-brand-cream">
+              {footer.socialLabel}
+            </h2>
+            <ul className="mt-4 space-y-2 text-sm">
+              {phone ? (
+                <li>
+                  <a
+                    href={`tel:${phone}`}
+                    className="text-brand-muted transition duration-brand hover:text-brand-cream"
+                    dir="ltr"
+                  >
+                    {phone}
+                  </a>
+                </li>
+              ) : null}
+              {site.email ? (
+                <li>
+                  <a
+                    href={`mailto:${site.email}`}
+                    className="text-brand-muted transition duration-brand hover:text-brand-cream"
+                    dir="ltr"
+                  >
+                    {site.email}
+                  </a>
+                </li>
+              ) : null}
+            </ul>
+
+            {social.length > 0 ? (
+              <ul
+                className="mt-5 flex flex-wrap gap-2.5"
+                aria-label={footer.socialLabel}
+              >
+                {social.map(({ key, label, href }) => (
+                  <li key={key}>
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-brand-border text-brand-cream transition duration-brand hover:border-brand-secondary hover:bg-brand-card/50"
+                      aria-label={label}
+                    >
+                      <SocialIcon name={key} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+
+            {site.social.whatsapp ? (
+              <Button
+                href={site.social.whatsapp}
+                variant="primary"
+                size="sm"
+                className="mt-6"
+              >
+                {nav.cta}
+              </Button>
+            ) : null}
+          </div>
         </div>
 
-        <nav aria-label={footer.linksTitle} className="md:px-2.5">
-          <h2 className="text-[1.375rem] font-medium leading-9.5">
-            {footer.linksTitle}
-          </h2>
-          <ul className="mt-2.75 flex flex-col">
-            {footer.links.map((link) => (
-              <li key={link.href}>
-                <NavLink
-                  href={link.href}
-                  className="flex h-11.5 items-center transition duration-brand hover:text-brand-accent"
-                  idleClassName="font-light text-brand-muted"
-                  activeClassName="font-medium text-brand-accent"
-                >
-                  {link.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <ul
-          className="flex flex-wrap items-start gap-3 md:justify-end md:px-2.5"
-          aria-label={footer.socialLabel}
-        >
-          {social.map(({ key, label, href }) => (
-            <li key={key}>
-              <a
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex h-12.5 w-12.5 items-center justify-center rounded-full border border-brand-secondary text-brand-cream transition duration-brand hover:border-brand-accent hover:text-brand-accent"
-                aria-label={label}
-              >
-                <SocialIcon name={key} />
-              </a>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-12 flex flex-col gap-2 border-t border-brand-border/80 pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-meta text-brand-muted">
+            © {year} {site.name}. {footer.copyright}
+          </p>
+          <p className="text-meta text-brand-muted" dir="ltr">
+            {site.url.replace(/^https?:\/\//, "")}
+          </p>
+        </div>
       </Container>
     </footer>
   );
@@ -114,9 +173,11 @@ function SocialIcon({ name }: { name: string }) {
     ),
   };
 
-  return icons[name] ?? (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <circle cx="12" cy="12" r="8" />
-    </svg>
+  return (
+    icons[name] ?? (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+        <circle cx="12" cy="12" r="8" />
+      </svg>
+    )
   );
 }

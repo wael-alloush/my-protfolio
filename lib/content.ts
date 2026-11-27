@@ -51,6 +51,8 @@ export type Project = Managed & {
   image: string;
   url: string;
   points: string[];
+  /** أقسام اختيارية تظهر كعناوين H2 تحت ملخص المشروع */
+  sections: ServiceSection[];
   featured: boolean;
   sortOrder: number;
 };
@@ -136,6 +138,7 @@ export function mapProject(row: RowDataPacket): Project {
     image: String(row.image),
     url: String(row.url ?? ""),
     points: stringList(row.points),
+    sections: sectionList(row.sections),
     featured: Number(row.featured) === 1,
     sortOrder: Number(row.sort_order),
   };
@@ -181,6 +184,7 @@ function projectsFromFiles(): Project[] {
     image: project.image,
     url: project.url ?? "",
     points: [...(project.points ?? [])],
+    sections: [],
     featured: Boolean(project.featured),
     sortOrder: index + 1,
   }));

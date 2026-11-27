@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "الصفحة غير موجودة",
+  description: "الصفحة التي طلبتها غير موجودة على موقع وائل العلوش.",
   robots: { index: false, follow: false },
 };
 

@@ -11,7 +11,7 @@ import "./globals.css";
  */
 const tajawal = Tajawal({
   subsets: ["arabic", "latin"],
-  weight: ["200", "300", "400", "500", "700", "800", "900"],
+  weight: ["200", "300", "400", "500", "700", "800"],
   variable: "--font-tajawal",
   display: "optional",
   adjustFontFallback: true,
@@ -30,7 +30,6 @@ export const metadata: Metadata = {
   creator: siteConfig.name,
   publisher: siteConfig.name,
   category: "تصميم وتطوير المواقع",
-  alternates: { canonical: "/" },
   keywords: [
     "تصميم مواقع",
     "تطوير مواقع",

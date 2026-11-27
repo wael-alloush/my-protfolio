@@ -178,7 +178,7 @@ export function articleJsonLd(post: {
     url,
     image: absoluteUrl(DEFAULT_IMAGE),
     author: { "@id": `${siteConfig.url}/#person` },
-    publisher: { "@id": `${siteConfig.url}/#person` },
+    publisher: { "@id": `${siteConfig.url}/#business` },
   };
 }
 

@@ -13,12 +13,12 @@ import Link from "next/link";
 export const revalidate = 300;
 
 export const metadata = createMetadata({
-  title: "الخدمات",
+  title: "خدمات تصميم مواقع للشركات والعيادات",
   description: servicesPage.hero.subtitle,
   path: "/services",
 });
 
-const iconClass = "h-14 w-14 fill-brand-accent";
+const iconClass = "h-14 w-14 fill-brand-secondary";
 
 const icons = [
   <svg key="site" viewBox="0 0 64 64" className={iconClass} aria-hidden>
@@ -44,7 +44,7 @@ export default async function ServicesPage() {
   return (
     <>
       <section className="relative overflow-hidden pb-4 pt-16 text-center lg:pt-24">
-        <div className="glow-orb pointer-events-none absolute inset-x-0 top-0 mx-auto h-80 w-[min(100%,42rem)]" />
+        <div className="glow-orb pointer-events-none absolute inset-x-0 top-0 mx-auto h-64 w-[min(100%,36rem)] opacity-70" />
         <Container className="relative">
           <Reveal>
             <h1 className="text-display mx-auto max-w-4xl text-balance text-brand-cream">
@@ -62,7 +62,7 @@ export default async function ServicesPage() {
           {servicesPage.stats.map((stat, i) => (
             <li key={stat.label}>
               <Reveal delay={i * 0.05}>
-                <p className="text-5xl font-extrabold text-brand-accent sm:text-6xl">
+                <p className="text-5xl font-extrabold text-brand-cream sm:text-6xl">
                   {stat.value}
                 </p>
                 <p className="mt-3 text-sm text-brand-muted">{stat.label}</p>

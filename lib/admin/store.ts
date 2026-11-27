@@ -47,6 +47,7 @@ export type ProjectInput = Pick<
   | "image"
   | "url"
   | "points"
+  | "sections"
   | "featured"
   | "sortOrder"
   | "status"
@@ -170,6 +171,7 @@ export function writeProject(input: ProjectInput, id: number | null) {
       image: input.image,
       url: input.url,
       points: JSON.stringify(input.points),
+      sections: JSON.stringify(input.sections),
       featured: input.featured ? 1 : 0,
       sort_order: input.sortOrder,
       status: input.status,

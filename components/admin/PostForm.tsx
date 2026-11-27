@@ -9,10 +9,13 @@ import {
   SlugField,
   StatusField,
   TextField,
+  toolButtonClass,
   useEditor,
 } from "@/components/admin/fields";
+import { ContentTips } from "@/components/admin/ContentTips";
 import { Panel } from "@/components/admin/ui";
 import { MdxContent } from "@/components/blog/MdxContent";
+import { parseMarkdownHeadings } from "@/lib/admin/headings";
 import { cn } from "@/lib/cn";
 import type { Post } from "@/lib/content";
 import { useRef, useState, type FormEvent } from "react";
@@ -21,11 +24,21 @@ const LIST = "/admin/posts";
 
 /** أزرار تُدرج صيغة التنسيق التي يفهمها عارض المقالات. */
 const tools = [
-  { label: "عنوان رئيسي", text: "## ", block: true },
-  { label: "عنوان فرعي", text: "### ", block: true },
+  { label: "عنوان H2", text: "## ", block: true },
+  { label: "عنوان H3", text: "### ", block: true },
   { label: "قائمة نقطية", text: "- ", block: true },
   { label: "قائمة مرقمة", text: "1. ", block: true },
   { label: "رابط", text: "[نص الرابط](https://)", block: false },
+  {
+    label: "رابط خدمة",
+    text: "[تصميم مواقع للشركات والعيادات](/services/corporate-websites)",
+    block: false,
+  },
+  {
+    label: "رابط أعمال",
+    text: "[نماذج من أعمالي](/portfolio)",
+    block: false,
+  },
 ];
 
 export function PostForm({
@@ -83,19 +96,24 @@ export function PostForm({
   }
 
   const errors = editor.fields;
+  const headings = parseMarkdownHeadings(values.content);
 
   return (
     <form onSubmit={submit} onChange={editor.touch} className="space-y-6" noValidate>
       {post?.id ? <input type="hidden" name="id" value={post.id} /> : null}
 
+      <ContentTips kind="post" />
+
       <Panel title="المقال">
         <div className="space-y-5">
           <TextField
-            label="العنوان"
+            label="العنوان (H1)"
             name="title"
             value={values.title}
             onChange={set("title")}
             error={errors.title}
+            best={70}
+            hint="عنوان واحد واضح بلا تكرار كلمات مفصولة بـ |."
           />
           <SlugField
             section="blog"
@@ -112,7 +130,7 @@ export function PostForm({
             error={errors.description}
             rows={3}
             best={160}
-            hint="يظهر تحت عنوان المقال، ويُستخدم وصفاً في نتائج البحث ما لم تكتب وصف سيو مختلفاً."
+            hint="يظهر في بطاقة المدونة وتحت العنوان في صفحة المقال، ويُستخدم للبحث إن تركت وصف السيو فارغاً."
           />
           <div className="grid gap-5 sm:grid-cols-3">
             <Field label="التصنيف" error={errors.category}>
@@ -143,8 +161,8 @@ export function PostForm({
       </Panel>
 
       <Panel
-        title="المحتوى"
-        description="افصل بين الفقرات بسطر فارغ. العناوين الرئيسية (##) تقسّم المقال وتساعد محركات البحث على فهمه."
+        title="المحتوى والعناوين الفرعية"
+        description="H1 هو عنوان المقال أعلاه. أدرج عناوين H2 عبر الزر أو بكتابة ## ثم العنوان في سطر مستقل — ضرورية لهيكل السيو. H3 لتفاصيل داخل قسم. زر واتساب يُضاف تلقائياً أسفل المقال."
       >
         <div className="mb-3 flex flex-wrap items-center gap-2">
           {tools.map((tool) => (
@@ -153,7 +171,7 @@ export function PostForm({
               type="button"
               disabled={preview}
               onClick={() => insert(tool.text, tool.block)}
-              className="h-8 rounded-pill border border-brand-border px-3 text-xs font-medium text-brand-cream transition duration-brand hover:border-brand-accent hover:text-brand-accent disabled:opacity-40"
+              className={toolButtonClass}
             >
               {tool.label}
             </button>
@@ -163,10 +181,9 @@ export function PostForm({
             onClick={() => setPreview((shown) => !shown)}
             aria-pressed={preview}
             className={cn(
-              "ms-auto h-8 rounded-pill px-4 text-xs font-medium transition duration-brand",
-              preview
-                ? "bg-brand-accent text-brand-dark"
-                : "border border-brand-border text-brand-cream hover:border-brand-accent hover:text-brand-accent",
+              "ms-auto",
+              toolButtonClass,
+              preview && "border-brand-accent bg-brand-accent text-brand-dark hover:border-brand-accent hover:bg-brand-accent",
             )}
           >
             {preview ? "العودة للكتابة" : "معاينة"}
@@ -190,12 +207,14 @@ export function PostForm({
           )}
         />
         {preview ? (
-          <div className="min-h-64 rounded-brand-sm border border-brand-border bg-brand-background p-5">
-            {values.content.trim() ? (
-              <MdxContent content={values.content} />
-            ) : (
-              <p className="text-brand-muted">لا يوجد محتوى للمعاينة بعد.</p>
-            )}
+          <div className="min-h-64 rounded-brand-lg border border-brand-border bg-brand-background p-5 sm:p-8">
+            <div className="mx-auto max-w-3xl">
+              {values.content.trim() ? (
+                <MdxContent content={values.content} />
+              ) : (
+                <p className="text-brand-muted">لا يوجد محتوى للمعاينة بعد.</p>
+              )}
+            </div>
           </div>
         ) : null}
         {errors.content ? (
@@ -204,7 +223,7 @@ export function PostForm({
           </p>
         ) : (
           <p className="mt-2 text-xs leading-6 text-brand-muted">
-            للجدول: اكتب كل صف في سطر وافصل الخانات بالرمز | — الصف الأول هو العناوين.
+            للجدول: كل صف في سطر، وافصل الخانات بـ | — الصف الأول للعناوين.
           </p>
         )}
       </Panel>
@@ -219,6 +238,8 @@ export function PostForm({
         onSeoTitle={set("seoTitle")}
         onSeoDescription={set("seoDescription")}
         errors={errors}
+        headings={headings}
+        headingsHint="لا توجد عناوين H2 بعد. استخدم زر «عنوان H2» أو اكتب ## عنوان القسم في سطر مستقل."
       />
 
       <FormActions
