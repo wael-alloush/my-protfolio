@@ -60,10 +60,20 @@ function failure(error: unknown): ActionResult {
   return { error: "تعذّر الحفظ. تحقق من اتصال قاعدة البيانات ثم حاول مجدداً." };
 }
 
-/** الصفحات العامة ثابتة؛ بعد كل تعديل تُجدَّد كلها ومعها السايت ماب وملفات الوكلاء. */
+/**
+ * بعد كل حفظ/حذف من اللوحة:
+ * - تُبطَل كاش التخطيط العام (الصفحات والمسارات الديناميكية)
+ * - تُحدَّث خريطة الموقع وملفات الوكلاء فوراً
+ * خريطة الموقع نفسها force-dynamic وتقرأ المنشور فقط من القاعدة.
+ */
 function publish() {
   revalidatePath("/", "layout");
-  for (const path of ["/sitemap.xml", "/llms.txt", "/index.md"]) revalidatePath(path);
+  revalidatePath("/sitemap.xml");
+  revalidatePath("/llms.txt");
+  revalidatePath("/index.md");
+  revalidatePath("/blog");
+  revalidatePath("/services");
+  revalidatePath("/portfolio");
 }
 
 /** تحويل دائم لمسار كان منشوراً فقط؛ المسودات لم تُفهرَس فلا تحتاج تحويلاً. */

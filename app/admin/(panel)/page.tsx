@@ -17,7 +17,7 @@ export default async function AdminHomePage() {
     <>
       <PageHeader
         title="لوحة التحكم"
-        description="كل ما تحفظه يظهر في الموقع والسايت ماب فوراً. نماذج الإضافة تتبع معايير المحتوى والسيو المعتمدة."
+        description="كل ما تنشره يظهر في الموقع وخريطة الموقع فوراً (المسودات لا تُفهرَس). الحذف أو تغيير الرابط يُحدّث السايت ماب والتحويلات تلقائياً."
       />
       <ul className="grid gap-5 md:grid-cols-3">
         {sections.map((section) => (

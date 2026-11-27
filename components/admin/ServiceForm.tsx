@@ -79,7 +79,7 @@ export function ServiceForm({
             onChange={set("title")}
             error={errors.title}
             best={70}
-            hint="مثال: تصميم مواقع للشركات والعيادات — نية واضحة بلا حشو."
+            hint="مثال: تصميم موقع إلكتروني — نية واضحة بلا حشو."
           />
           <SlugField
             section="services"
@@ -105,7 +105,7 @@ export function ServiceForm({
             onChange={set("intro")}
             error={errors.intro}
             rows={5}
-            hint="لمن الخدمة وكيف نعمل (متطلبات → واجهات → تطوير → نشر ودعم) دون وعود ترتيب في جوجل."
+            hint="لمن الخدمة وكيف نعمل (متطلبات → واجهات → تطوير → نشر ودعم)."
           />
           <TextField
             label="المزايا المختصرة"

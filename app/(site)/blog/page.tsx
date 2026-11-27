@@ -9,7 +9,7 @@ import { createMetadata } from "@/lib/seo";
 export const revalidate = 300;
 
 export const metadata = createMetadata({
-  title: "مدونة تصميم مواقع في السعودية",
+  title: "مدونة تصميم المواقع وصفحات الهبوط",
   description: blogPage.subtitle,
   path: "/blog",
 });

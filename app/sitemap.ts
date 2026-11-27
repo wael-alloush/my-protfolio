@@ -1,8 +1,13 @@
 import { getPosts, getProjects, getServices } from "@/lib/content";
 import { absoluteUrl } from "@/lib/seo";
 import type { MetadataRoute } from "next";
+import { connection } from "next/server";
 
-export const revalidate = 300;
+/**
+ * تُبنى الخريطة من المحتوى المنشور في القاعدة في كل طلب،
+ * حتى يظهر أي نشر/تعديل/حذف من لوحة التحكم فوراً دون انتظار ISR.
+ */
+export const dynamic = "force-dynamic";
 
 type ChangeFrequency = NonNullable<
   MetadataRoute.Sitemap[number]["changeFrequency"]
@@ -19,11 +24,17 @@ function entry(
     url: absoluteUrl(path),
     changeFrequency,
     priority,
-    ...(lastModified && !Number.isNaN(lastModified.getTime()) ? { lastModified } : {}),
+    ...(lastModified && !Number.isNaN(lastModified.getTime())
+      ? { lastModified }
+      : {}),
   };
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // يضمن أن المسار ديناميكي في وقت التشغيل (Next 16).
+  await connection();
+
+  // getPosts / getServices / getProjects تُرجع المنشور فقط — المسودات لا تدخل الخريطة.
   const [services, projects, posts] = await Promise.all([
     getServices(),
     getProjects(),
@@ -45,7 +56,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ),
     entry("/blog", 0.8, "weekly"),
     ...posts.map((post) =>
-      entry(`/blog/${post.slug}`, 0.6, "yearly", post.updatedAt ?? post.date),
+      entry(`/blog/${post.slug}`, 0.6, "weekly", post.updatedAt ?? post.date),
     ),
   ];
 }

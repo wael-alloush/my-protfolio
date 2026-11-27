@@ -118,7 +118,11 @@ export function businessJsonLd(site: SiteConfig = siteConfig) {
       { "@type": "City", name: "الدمام" },
     ],
     availableLanguage: ["Arabic", "ar"],
-    serviceType: ["تصميم مواقع تعريفية", "صفحات هبوط", "إعادة تصميم المواقع"],
+    serviceType: [
+      "تصميم موقع إلكتروني",
+      "تصميم صفحة هبوط",
+      "تحسين الظهور في محركات البحث",
+    ],
     sameAs,
     contactPoint: {
       "@type": "ContactPoint",

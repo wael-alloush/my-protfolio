@@ -1,35 +1,65 @@
+import { siteConfig } from "@/lib/site";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+const LINK_PATTERN = "\\[[^\\]]+\\]\\([^)\\s]+\\)";
+
+function parseLinkToken(token: string) {
+  const match = token.match(/^\[([^\]]+)\]\(([^)\s]+)\)$/);
+  return match ? { label: match[1], href: match[2] } : null;
+}
+
+function findMarkdownLinks(line: string) {
+  return line.match(new RegExp(LINK_PATTERN, "g"));
+}
+
+/** روابط الموقع الكامل تُحوَّل لمسار داخلي حتى يعمل التنقل داخل التطبيق. */
+function normalizeHref(href: string) {
+  const base = siteConfig.url.replace(/\/$/, "");
+  if (href === base || href === `${base}/`) return "/";
+  if (href.startsWith(`${base}/`)) return href.slice(base.length) || "/";
+  return href;
+}
+
+function MdLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: ReactNode;
+}) {
+  const target = normalizeHref(href);
+  const className =
+    "font-medium text-brand-accent underline decoration-brand-accent/30 underline-offset-[6px] transition duration-brand hover:decoration-brand-accent";
+
+  if (target.startsWith("http") || target.startsWith("mailto:") || target.startsWith("tel:")) {
+    return (
+      <a href={target} className={className} target="_blank" rel="noopener noreferrer">
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={target} className={className}>
+      {children}
+    </Link>
+  );
+}
+
 /** روابط وتنسيق سطري بسيط (**غامق** و*مائل*) داخل الفقرات والعناوين. */
 function inline(text: string): ReactNode[] {
-  const tokens = text.split(/(\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*|\*[^*]+\*)/g);
+  const tokens = text.split(
+    new RegExp(`(${LINK_PATTERN}|\\*\\*[^*]+\\*\\*|\\*[^*]+\\*)`, "g"),
+  );
 
   return tokens.map((token, index) => {
-    const link = token.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    const link = parseLinkToken(token);
     if (link) {
-      const [, label, href] = link;
-      if (href.startsWith("http")) {
-        return (
-          <a
-            key={index}
-            href={href}
-            className="font-medium text-brand-accent underline decoration-brand-accent/30 underline-offset-[6px] transition duration-brand hover:decoration-brand-accent"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {label}
-          </a>
-        );
-      }
       return (
-        <Link
-          key={index}
-          href={href}
-          className="font-medium text-brand-accent underline decoration-brand-accent/30 underline-offset-[6px] transition duration-brand hover:decoration-brand-accent"
-        >
-          {label}
-        </Link>
+        <MdLink key={index} href={link.href}>
+          {link.label}
+        </MdLink>
       );
     }
 
@@ -55,9 +85,12 @@ function inline(text: string): ReactNode[] {
   });
 }
 
+type MdLinkItem = { label: string; href: string };
+
 type Block =
   | { type: "h2" | "h3"; text: string }
   | { type: "p"; text: string }
+  | { type: "links"; items: MdLinkItem[] }
   | { type: "ul" | "ol"; items: string[] }
   | { type: "table"; rows: string[][] };
 
@@ -68,6 +101,17 @@ function isTableSeparator(line: string) {
     .split("|")
     .map((cell) => cell.trim());
   return cells.length > 0 && cells.every((cell) => /^:?-{3,}:?$/.test(cell));
+}
+
+/** سطر تنقل: رابطان أو أكثر مفصولان بـ | أو رموز فاصلة — ليس جدولاً. */
+function parseLinkRow(line: string): MdLinkItem[] | null {
+  const matches = findMarkdownLinks(line);
+  if (!matches || matches.length < 2) return null;
+  const rest = line.replace(new RegExp(LINK_PATTERN, "g"), "").trim();
+  if (rest && !/^[\s|·•\/،,–—-]+$/.test(rest)) return null;
+  return matches
+    .map(parseLinkToken)
+    .filter((item): item is MdLinkItem => item !== null);
 }
 
 function parseTable(lines: string[]): string[][] {
@@ -92,12 +136,17 @@ export function parseMarkdownBlocks(content: string): Block[] {
   function flushParagraph(buffer: string[]) {
     const text = buffer.join(" ").trim();
     buffer.length = 0;
-    if (text) blocks.push({ type: "p", text });
+    if (!text) return;
+    const linkRow = parseLinkRow(text);
+    if (linkRow) {
+      blocks.push({ type: "links", items: linkRow });
+      return;
+    }
+    blocks.push({ type: "p", text });
   }
 
   while (i < lines.length) {
-    const raw = lines[i];
-    const line = raw.trim();
+    const line = lines[i].trim();
 
     if (!line) {
       i += 1;
@@ -116,12 +165,18 @@ export function parseMarkdownBlocks(content: string): Block[] {
       continue;
     }
 
+    const linkRow = parseLinkRow(line);
+    if (linkRow) {
+      blocks.push({ type: "links", items: linkRow });
+      i += 1;
+      continue;
+    }
+
     if (line.startsWith("- ")) {
       const items: string[] = [];
       while (i < lines.length) {
         const item = lines[i].trim();
         if (!item) {
-          // سطر فارغ داخل قائمة متصلة يُتجاهل إن كان العنصر التالي ما زال نقطة.
           const next = lines[i + 1]?.trim() ?? "";
           if (next.startsWith("- ")) {
             i += 1;
@@ -157,11 +212,16 @@ export function parseMarkdownBlocks(content: string): Block[] {
       continue;
     }
 
-    if (line.includes("|") && i + 1 < lines.length && isTableSeparator(lines[i + 1].trim())) {
+    if (
+      line.includes("|") &&
+      i + 1 < lines.length &&
+      isTableSeparator(lines[i + 1].trim()) &&
+      !parseLinkRow(line)
+    ) {
       const tableLines: string[] = [];
       while (i < lines.length) {
         const row = lines[i].trim();
-        if (!row || !row.includes("|")) break;
+        if (!row || !row.includes("|") || parseLinkRow(row)) break;
         tableLines.push(row);
         i += 1;
       }
@@ -176,6 +236,7 @@ export function parseMarkdownBlocks(content: string): Block[] {
       if (!next) break;
       if (next.startsWith("## ") || next.startsWith("### ")) break;
       if (next.startsWith("- ") || /^\d+[.)]\s+/.test(next)) break;
+      if (parseLinkRow(next)) break;
       if (
         next.includes("|") &&
         i + 1 < lines.length &&
@@ -217,6 +278,26 @@ export function MdxContent({ content }: { content: string }) {
             >
               {inline(block.text)}
             </h3>
+          );
+        }
+
+        if (block.type === "links") {
+          return (
+            <p
+              key={index}
+              className="flex flex-wrap items-center gap-x-3 gap-y-2 text-brand-text-soft"
+            >
+              {block.items.map((item, itemIndex) => (
+                <span key={`${item.href}-${itemIndex}`} className="inline-flex items-center gap-3">
+                  {itemIndex > 0 ? (
+                    <span className="text-brand-muted" aria-hidden>
+                      |
+                    </span>
+                  ) : null}
+                  <MdLink href={item.href}>{item.label}</MdLink>
+                </span>
+              ))}
+            </p>
           );
         }
 

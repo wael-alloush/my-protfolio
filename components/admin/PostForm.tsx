@@ -31,7 +31,7 @@ const tools = [
   { label: "رابط", text: "[نص الرابط](https://)", block: false },
   {
     label: "رابط خدمة",
-    text: "[تصميم مواقع للشركات والعيادات](/services/corporate-websites)",
+    text: "[تصميم موقع إلكتروني](/services/corporate-websites)",
     block: false,
   },
   {

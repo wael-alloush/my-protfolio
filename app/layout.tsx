@@ -31,10 +31,10 @@ export const metadata: Metadata = {
   publisher: siteConfig.name,
   category: "تصميم وتطوير المواقع",
   keywords: [
+    "تصميم موقع إلكتروني",
+    "تصميم صفحة هبوط",
+    "تحسين الظهور في محركات البحث",
     "تصميم مواقع",
-    "تطوير مواقع",
-    "صفحات هبوط",
-    "مهندس حاسب",
     "وائل العلوش",
     siteConfig.nameEn,
   ],

@@ -6,9 +6,9 @@ import { activeSocialLinks } from "@/lib/site";
 import Link from "next/link";
 
 export const metadata = createMetadata({
-  title: "تواصل لطلب تصميم موقع",
+  title: "تواصل لطلب تصميم موقع أو صفحة هبوط",
   description:
-    "راسل وائل العلوش عبر واتساب لطلب تصميم موقع في السعودية. الهاتف والبريد وحسابات التواصل متاحة أيضاً.",
+    "راسل وائل العلوش عبر واتساب لطلب تصميم موقع أو صفحة هبوط في السعودية. نتفق على النطاق والسعر قبل البدء.",
   path: "/contact",
 });
 
@@ -22,8 +22,8 @@ export default async function ContactPage() {
       <div className="mx-auto max-w-2xl">
         <h1 className="text-3xl font-medium text-brand-cream sm:text-5xl">تواصل</h1>
         <p className="mt-5 text-lg font-light leading-8 text-brand-muted">
-          لا يوجد نموذج على الموقع. اطلب موقعك مباشرة عبر واتساب، ونتفق على
-          نطاق العمل والسعر قبل البدء.
+          لا يوجد نموذج على الموقع. اطلب تصميم موقع أو صفحة هبوط عبر واتساب،
+          وصف نشاطك وهدفك باختصار، ونتفق على النطاق والسعر قبل البدء.
         </p>
         {site.social.whatsapp ? (
           <Button href={site.social.whatsapp} variant="primary" className="mt-8">

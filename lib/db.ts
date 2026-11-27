@@ -1,4 +1,4 @@
-import { seedContent } from "@/lib/seed";
+import { seedContent, syncFileServices } from "@/lib/seed";
 import mysql from "mysql2/promise";
 import type { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
@@ -154,6 +154,8 @@ async function migrate(pool: Pool) {
     if (claim.affectedRows === 1) {
       await seedContent(connection, nowUtc());
     }
+    // الخدمات الأساسية في الملفات تُحدَّث دائماً حتى تظهر الصياغة الجديدة بعد النشر.
+    await syncFileServices(connection, nowUtc());
     await connection.commit();
   } catch (error) {
     await connection.rollback();

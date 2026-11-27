@@ -6,14 +6,14 @@ import Link from "next/link";
 /** يوجّه قارئ المقال إلى الخدمة المناسبة ثم واتساب دون حشو. */
 export function serviceLinkForPost(slug: string): { href: string; label: string } {
   if (slug.includes("landing")) {
-    return { href: "/services/landing-pages", label: "خدمة صفحات الهبوط" };
+    return { href: "/services/landing-pages", label: "تصميم صفحة هبوط" };
   }
-  if (slug.includes("redesign") || slug.includes("cost")) {
-    return { href: "/services", label: "خدمات تصميم المواقع" };
+  if (slug.includes("seo") || slug.includes("search") || slug.includes("cost")) {
+    return { href: "/services/search-visibility", label: "تحسين الظهور في محركات البحث" };
   }
   return {
     href: "/services/corporate-websites",
-    label: "تصميم مواقع للشركات والعيادات",
+    label: "تصميم موقع إلكتروني",
   };
 }
 
